@@ -12,17 +12,29 @@ namespace Med_App_API.Data
             _context = context;
         }
 
-        public async Task<User> Login(string email, string password)
+        public async Task<Physician> PhysicianLogin(string email, string password)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Email == email);
+            var physician = await _context.Physician.FirstOrDefaultAsync(x => x.Email == email);
 
-            if (user == null)
+            if (physician == null)
                 return null;
 
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(password, physician.PasswordHash, physician.PasswordSalt))
                 return null;
 
-            return user;
+            return physician;
+        }
+
+        public async Task<Patient> PatientLogin(string email, string password)
+        {
+            var patient = await _context.Patient.FirstOrDefaultAsync(x => x.Email == email);
+            if (patient == null)
+                return null;
+
+            if (!VerifyPasswordHash(password, patient.PasswordHash, patient.PasswordSalt))
+                return null;
+
+            return patient;
         }
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
@@ -38,18 +50,32 @@ namespace Med_App_API.Data
             return true;
         }
 
-        public async Task<User> Register(User user, string password)
+        public async Task<Physician> RegisterPhysician(Physician physician, string password)
         {
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            physician.PasswordHash = passwordHash;
+            physician.PasswordSalt = passwordSalt;
 
-            await _context.User.AddAsync(user);
+            await _context.Physician.AddAsync(physician);
             await _context.SaveChangesAsync();
 
-            return user;
+            return physician;
+        }
+
+        public async Task<Patient> RegisterPatient(Patient patient, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            patient.PasswordHash = passwordHash;
+            patient.PasswordSalt = passwordSalt;
+
+            await _context.Patient.AddAsync(patient);
+            await _context.SaveChangesAsync();
+
+            return patient;
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -61,9 +87,17 @@ namespace Med_App_API.Data
             }
         }
 
-        public async Task<bool> UserExists(string email)
+        public async Task<bool> PhysicianExists(string email)
         {
-            if (await _context.User.AnyAsync(x => x.Email == email))
+            if (await _context.Physician.AnyAsync(x => x.Email == email))
+                return true;
+
+            return false;
+        }
+
+        public async Task<bool> PatientExists(string email)
+        {
+            if (await _context.Patient.AnyAsync(x => x.Email == email))
                 return true;
 
             return false;

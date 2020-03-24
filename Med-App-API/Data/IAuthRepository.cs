@@ -5,8 +5,13 @@ namespace Med_App_API.Data
 {
     public interface IAuthRepository
     {
-        Task<User> Register(User user, string password);
-        Task<User> Login(string username, string password);
-        Task<bool> UserExists(string username);
+        Task<Physician> PhysicianLogin(string email, string password);
+        Task<Patient> PatientLogin(string email, string password);
+        Task<Physician> RegisterPhysician(Physician physician, string password);
+        Task<Patient> RegisterPatient(Patient patient, string password);
+        Task<bool> PhysicianExists(string email);
+        Task<bool> PatientExists(string email);
+
+
     }
 }

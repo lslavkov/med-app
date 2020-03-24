@@ -24,38 +24,50 @@ namespace Med_App_API.Controllers
             _repo = repo;
             _config = config;
         }
-          [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+        [HttpPost("register/patient")]
+        public async Task<IActionResult> RegisterPatient(PatientForRegisterDto patientForRegisterDto)
         {
-            // validate request
-
-            // userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
-
-            if (await _repo.UserExists(userForRegisterDto.Email))
+            if (await _repo.PatientExists(patientForRegisterDto.Email))
                 return BadRequest("Email already exists");
 
-            var userToCreate = new User
+            var patientToCreate = new Patient
             {
-                Email = userForRegisterDto.Email
+                Email = patientForRegisterDto.Email
             };
 
-            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+            var createdPatient = await _repo.RegisterPatient(patientToCreate, patientForRegisterDto.Password);
 
             return StatusCode(201);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        [HttpPost("register/physician")]
+        public async Task<IActionResult> RegisterPhysician(PhysicianForRegisterDto physicianForRegisterDtop)
         {
-            var userFromRepo = await _repo.Login(userForLoginDto.Email, userForLoginDto.Password);
+            if (await _repo.PhysicianExists(physicianForRegisterDtop.Email))
+                return BadRequest("Email already exists");
 
-            if (userFromRepo == null)
+            var physicianToCreate = new Physician
+            {
+                Email = physicianForRegisterDtop.Email
+            };
+
+            var createdPhysician = await _repo.RegisterPhysician(physicianToCreate, physicianForRegisterDtop.Password);
+
+            return StatusCode(201);
+        }
+
+        [HttpPost("login/physician")]
+        public async Task<IActionResult> LoginPhysician( PhysicianForLoginDto physicianForLoginDto)
+        {
+            var physicianFromRepo = await _repo.PhysicianLogin(physicianForLoginDto.Email, physicianForLoginDto.Password);
+
+            if (physicianFromRepo == null)
                 return Unauthorized();
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Email, userFromRepo.Email)
+                new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.Email, physicianFromRepo.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
@@ -72,7 +84,41 @@ namespace Med_App_API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new 
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token)
+            });
+        }
+
+        [HttpPost("login/patient")]
+        public async Task<IActionResult> LoginPatient(PatientForLoginDto patientForLoginDto)
+        {
+            var physicianFromRepo = await _repo.PatientLogin(patientForLoginDto.Email, patientForLoginDto.Password);
+
+            if (physicianFromRepo == null)
+                return Unauthorized();
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.Email, physicianFromRepo.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new
             {
                 token = tokenHandler.WriteToken(token)
             });
