@@ -16,6 +16,7 @@ appsettings.json
 *.sln.docstates
 Migrations
 *.db
+.idea
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
