@@ -66,7 +66,7 @@ namespace Med_App_API.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Email),
                 new Claim(ClaimTypes.Email, physicianFromRepo.Email)
             };
 
