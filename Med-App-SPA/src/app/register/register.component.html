@@ -1,1 +1,89 @@
-<p>register works!</p>
+<div class="container mt-5">
+  <form [formGroup]="registerForm">
+    <h2 class="text-center text-primary">Sign Up</h2>
+    <hr/>
+
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="first_name"
+        placeholder="First Name"
+      >
+    </div>
+
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="last_name"
+        placeholder="Last name"
+      >
+    </div>
+
+    <div class="form-group">
+      <input
+        type="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="E-mail"
+      />
+      <div class="invalid-feedback">Please enter correct e-mail address</div>
+    </div>
+
+    <div class="form-group">
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+        placeholder="Password"
+      />
+      <div
+        class="invalid-feedback"
+      >
+        Password is required
+      </div>
+      <div
+        class="invalid-feedback"
+      >
+        Password must be at least 4 characters
+      </div>
+      <div
+        class="invalid-feedback"
+      >
+        Password cannot exceed 8 characters
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input
+        type="password"
+        class="form-control"
+        formControlName="confirmPassword"
+        placeholder="Confirm Password"
+      />
+      <div
+        class="invalid-feedback"
+      >
+        Confirm Password is required
+      </div>
+      <div
+        class="invalid-feedback"
+      >
+        Passwords must match
+      </div>
+    </div>
+
+    <div class="form-group text-center">
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Register
+      </button>
+      <button class="btn btn-default" type="button">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
