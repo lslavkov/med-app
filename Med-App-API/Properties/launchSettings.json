@@ -19,7 +19,7 @@
     },
     "Med_App_API": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
