@@ -5,12 +5,11 @@ namespace Med_App_API.Dto
     public class PatientForRegisterDto
     {
         [Required]
-        [EmailAddress]
+        // [EmailAddress]
         public string Email { get; set; }
-        public string Username { get; set; }
-        //[Required]
+        [Required]
         public string FirstName { get; set; }
-        //[Required]
+        [Required]
         public string LastName { get; set; }
 
         [Required]

@@ -32,7 +32,9 @@ namespace Med_App_API.Controllers
 
             var patientToCreate = new Patient
             {
-                Email = patientForRegisterDto.Email
+                Email = patientForRegisterDto.Email,
+                FirstName = patientForRegisterDto.FirstName,
+                LastName = patientForRegisterDto.LastName
             };
 
             var createdPatient = await _repo.RegisterPatient(patientToCreate, patientForRegisterDto.Password);
@@ -48,7 +50,9 @@ namespace Med_App_API.Controllers
 
             var physicianToCreate = new Physician
             {
-                Email = physicianForRegisterDtop.Email
+                Email = physicianForRegisterDtop.Email,
+                FirstName = physicianForRegisterDtop.FirstName,
+                LastName = physicianForRegisterDtop.LastName
             };
 
             var createdPhysician = await _repo.RegisterPhysician(physicianToCreate, physicianForRegisterDtop.Password);
