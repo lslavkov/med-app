@@ -12,7 +12,7 @@ namespace Med_App_API.Models
         public byte[] PasswordSalt { get; set; }
         public bool IsVerifiedRegistration { get; set; }
         public bool IsVerifiedPassword { get; set; }
-        public int PhysicianId { get; set; }
+        public int? PhysicianId { get; set; }
         public Physician Physician { get; set; }
         public ICollection<Appointments> Appointments { get; set; }
 

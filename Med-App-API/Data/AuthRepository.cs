@@ -7,6 +7,7 @@ namespace Med_App_API.Data
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _context;
+
         public AuthRepository(DataContext context)
         {
             _context = context;
@@ -47,6 +48,7 @@ namespace Med_App_API.Data
                     if (computedHash[i] != passwordHash[i]) return false;
                 }
             }
+
             return true;
         }
 
@@ -87,17 +89,10 @@ namespace Med_App_API.Data
             }
         }
 
-        public async Task<bool> PhysicianExists(string email)
+        public async Task<bool> UserExists(string email)
         {
-            if (await _context.Physician.AnyAsync(x => x.Email == email))
-                return true;
-
-            return false;
-        }
-
-        public async Task<bool> PatientExists(string email)
-        {
-            if (await _context.Patient.AnyAsync(x => x.Email == email))
+            if (await _context.Physician.AnyAsync(x => x.Email == email) ||
+                await _context.Patient.AnyAsync(x => x.Email == email))
                 return true;
 
             return false;

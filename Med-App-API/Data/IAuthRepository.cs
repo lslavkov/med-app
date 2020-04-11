@@ -9,9 +9,7 @@ namespace Med_App_API.Data
         Task<Patient> PatientLogin(string email, string password);
         Task<Physician> RegisterPhysician(Physician physician, string password);
         Task<Patient> RegisterPatient(Patient patient, string password);
-        Task<bool> PhysicianExists(string email);
-        Task<bool> PatientExists(string email);
-
+        Task<bool> UserExists(string email);
 
     }
 }

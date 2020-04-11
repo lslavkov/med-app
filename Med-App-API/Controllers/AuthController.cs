@@ -24,10 +24,11 @@ namespace Med_App_API.Controllers
             _repo = repo;
             _config = config;
         }
+
         [HttpPost("register/patient")]
         public async Task<IActionResult> RegisterPatient(PatientForRegisterDto patientForRegisterDto)
         {
-            if (await _repo.PatientExists(patientForRegisterDto.Email))
+            if (await _repo.UserExists(patientForRegisterDto.Email))
                 return BadRequest("Email already exists");
 
             var patientToCreate = new Patient
@@ -45,7 +46,7 @@ namespace Med_App_API.Controllers
         [HttpPost("register/physician")]
         public async Task<IActionResult> RegisterPhysician(PhysicianForRegisterDto physicianForRegisterDtop)
         {
-            if (await _repo.PhysicianExists(physicianForRegisterDtop.Email))
+            if (await _repo.UserExists(physicianForRegisterDtop.Email))
                 return BadRequest("Email already exists");
 
             var physicianToCreate = new Physician
@@ -60,10 +61,60 @@ namespace Med_App_API.Controllers
             return StatusCode(201);
         }
 
-        [HttpPost("login/physician")]
-        public async Task<IActionResult> LoginPhysician( PhysicianForLoginDto physicianForLoginDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> UserLogin(UserForLoginDto userForLoginDto)
         {
-            var physicianFromRepo = await _repo.PhysicianLogin(physicianForLoginDto.Email, physicianForLoginDto.Password);
+            var physicianFromRepo = await _repo.PhysicianLogin(userForLoginDto.Email, userForLoginDto.Password);
+            var patientFromRepo = await _repo.PatientLogin(userForLoginDto.Email, userForLoginDto.Password);
+            var claims = new Claim[2];
+
+            if (physicianFromRepo != null)
+            {
+                claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Email),
+                    new Claim(ClaimTypes.Email, physicianFromRepo.Email),
+                };
+            }
+            else if (patientFromRepo != null)
+            {
+                claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, patientFromRepo.Email),
+                    new Claim(ClaimTypes.Email, patientFromRepo.Email),
+                };
+            }
+            else
+            {
+                return BadRequest();
+            }
+            
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token)
+            });
+            
+        }
+
+        [HttpPost("login/physician")]
+        public async Task<IActionResult> LoginPhysician(PhysicianForLoginDto physicianForLoginDto)
+        {
+            var physicianFromRepo =
+                await _repo.PhysicianLogin(physicianForLoginDto.Email, physicianForLoginDto.Password);
 
             if (physicianFromRepo == null)
                 return Unauthorized();
