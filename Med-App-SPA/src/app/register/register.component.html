@@ -3,18 +3,6 @@
     <h2 class="text-center text-primary">Sign Up Form</h2>
     <hr/>
 
-    <div class="form-group mb-1">
-      <label class="control-label mr-10">I am: </label>
-      <label class="radio-inline">
-        <input type="radio" class="mr-2 ml-3" value="patient" formControlName="type">
-        Patient
-      </label>
-
-      <label class="radio-inline">
-        <input type="radio" class="mr-2 ml-3" value="physician" formControlName="type">
-        Physician
-      </label>
-    </div>
 
     <div class="form-group">
       <input
@@ -51,6 +39,36 @@
 
     <div class="form-group">
       <input
+        type="text"
+        class="form-control"
+        formControlName="userName"
+        placeholder="UserName"
+        [ngClass]="{'is-invalid': registerForm.get('userName').errors && registerForm.get('userName').touched}"
+      />
+      <div class="invalid-feedback" *ngIf="
+        registerForm.get('userName').hasError('required') &&
+        registerForm.get('userName').touched"
+      >
+        Username is required
+      </div>
+
+      <div class="invalid-feedback" *ngIf="
+        registerForm.get('userName').hasError('minlength') &&
+        registerForm.get('userName').touched"
+      >
+      Username cannot be less than 6 characters
+      </div>
+
+      <div class="invalid-feedback" *ngIf="
+        registerForm.get('userName').hasError('maxlength') &&
+        registerForm.get('userName').touched"
+      >
+        Username cannot be more than 6 characters
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input
         type="password"
         class="form-control"
         formControlName="password"
@@ -75,11 +93,11 @@
         registerForm.get('password').hasError('minlength') &&
         registerForm.get('password').touched"
       >
-        Password must be at least 4 characters
+        Password must be at least 8 characters
       </div>
       <div class="invalid-feedback"
            *ngIf="registerForm.get('password').hasError('maxlength') &&registerForm.get('password').touched">
-        Password cannot exceed 8 characters
+        Password cannot exceed 16 characters
       </div>
 
     </div>

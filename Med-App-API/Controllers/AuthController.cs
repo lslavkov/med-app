@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Med_App_API.Data;
 using Med_App_API.Dto;
 using Med_App_API.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,116 +19,71 @@ namespace Med_App_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IConfiguration config, UserManager<User> userManager, SignInManager<User> signInManager,
+            IMapper mapper)
         {
-            _repo = repo;
             _config = config;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _mapper = mapper;
         }
 
-        [HttpPost("register/patient")]
-        public async Task<IActionResult> RegisterPatient(PatientForRegisterDto patientForRegisterDto)
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUser(UserForRegisterDto userForRegisterDto)
         {
-            if (await _repo.UserExists(patientForRegisterDto.Email))
-                return BadRequest("Email already exists");
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
+            
+            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
-            var patientToCreate = new Patient
+            if (result.Succeeded)
             {
-                Email = patientForRegisterDto.Email,
-                FirstName = patientForRegisterDto.FirstName,
-                LastName = patientForRegisterDto.LastName
-            };
+                return Ok();
+            }
 
-            var createdPatient = await _repo.RegisterPatient(patientToCreate, patientForRegisterDto.Password);
-
-            return StatusCode(201);
-        }
-
-        [HttpPost("register/physician")]
-        public async Task<IActionResult> RegisterPhysician(PhysicianForRegisterDto physicianForRegisterDtop)
-        {
-            if (await _repo.UserExists(physicianForRegisterDtop.Email))
-                return BadRequest("Email already exists");
-
-            var physicianToCreate = new Physician
-            {
-                Email = physicianForRegisterDtop.Email,
-                FirstName = physicianForRegisterDtop.FirstName,
-                LastName = physicianForRegisterDtop.LastName
-            };
-
-            var createdPhysician = await _repo.RegisterPhysician(physicianToCreate, physicianForRegisterDtop.Password);
-
-            return StatusCode(201);
+            return BadRequest();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> UserLogin(UserForLoginDto userForLoginDto)
+        public async Task<IActionResult> LoginUser(UserForLoginDto userForLoginDto)
         {
-            var physicianFromRepo = await _repo.PhysicianLogin(userForLoginDto.Email, userForLoginDto.Password);
-            var patientFromRepo = await _repo.PatientLogin(userForLoginDto.Email, userForLoginDto.Password);
-            var claims = new Claim[2];
+            var user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
 
-            if (physicianFromRepo != null)
+            if (result.Succeeded)
             {
-                claims = new[]
+                var appUser = _mapper.Map<UserForListDto>(user);
+                return Ok(new
                 {
-                    new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Email),
-                    new Claim(ClaimTypes.Email, physicianFromRepo.Email),
-                };
+                    token = GenerateJwtToken(user).Result,
+                    user = appUser
+                });
             }
-            else if (patientFromRepo != null)
-            {
-                claims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, patientFromRepo.Email),
-                    new Claim(ClaimTypes.Email, patientFromRepo.Email),
-                };
-            }
-            else
-            {
-                return BadRequest();
-            }
-            
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
-            
+            return Unauthorized();
         }
 
-        [HttpPost("login/physician")]
-        public async Task<IActionResult> LoginPhysician(PhysicianForLoginDto physicianForLoginDto)
+        private async Task<string> GenerateJwtToken(User user)
         {
-            var physicianFromRepo =
-                await _repo.PhysicianLogin(physicianForLoginDto.Email, physicianForLoginDto.Password);
-
-            if (physicianFromRepo == null)
-                return Unauthorized();
-
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Email),
-                new Claim(ClaimTypes.Email, physicianFromRepo.Email)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -139,44 +97,8 @@ namespace Med_App_API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
+            return tokenHandler.WriteToken(token);
         }
 
-        [HttpPost("login/patient")]
-        public async Task<IActionResult> LoginPatient(PatientForLoginDto patientForLoginDto)
-        {
-            var physicianFromRepo = await _repo.PatientLogin(patientForLoginDto.Email, patientForLoginDto.Password);
-
-            if (physicianFromRepo == null)
-                return Unauthorized();
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, physicianFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Email, physicianFromRepo.Email)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
-        }
     }
 }
