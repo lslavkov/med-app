@@ -9,31 +9,33 @@ namespace Med_App_API.Data
     {
         public static void SeedUsersAndRoles(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            var roles = new List<Role>
+            if (!userManager.Users.Any())
             {
-                new Role {Name = "Admin"},
-                new Role {Name = "Physician"},
-                new Role {Name = "Nurse"},
-                new Role {Name = "Patient"},
-            };
-            foreach (var role in roles)
-            {
-                roleManager.CreateAsync(role).Wait();
-            }
+                var roles = new List<Role>
+                {
+                    new Role {Name = "Admin"},
+                    new Role {Name = "Physician"},
+                    new Role {Name = "Nurse"},
+                    new Role {Name = "Patient"},
+                };
+                foreach (var role in roles)
+                {
+                    roleManager.CreateAsync(role).Wait();
+                }
 
-            var adminUser = new User
-            {
-                Email = "admin@example.com",
-                UserName = "Admin"
-            };
+                var adminUser = new User
+                {
+                    Email = "admin@example.com",
+                    UserName = "Admin"
+                };
 
-            var result = userManager.CreateAsync(adminUser, "password").Result;
+                var result = userManager.CreateAsync(adminUser, "password").Result;
 
-            if (result.Succeeded)
-            {
-                var admin = userManager.FindByNameAsync("Admin").Result;
-                userManager.AddToRoleAsync(admin, "Admin");
-                ;
+                if (result.Succeeded)
+                {
+                    var admin = userManager.FindByNameAsync("Admin").Result;
+                    var adminRole = userManager.AddToRoleAsync(admin, "Admin").Result;
+                }
             }
         }
     }
