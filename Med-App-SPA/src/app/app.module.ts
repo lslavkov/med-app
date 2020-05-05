@@ -12,6 +12,7 @@ import {RouterModule} from "@angular/router";
 import {appRoutes} from "../routes";
 import {FooterComponent} from './footer/footer.component';
 import {JwtModule} from "@auth0/angular-jwt";
+import {ErrorInterceptorProvider} from "./_service/error.interceptor";
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -41,7 +42,9 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [],
+  providers: [
+    ErrorInterceptorProvider
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

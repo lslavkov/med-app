@@ -21,7 +21,8 @@ export class LoginComponent implements OnInit {
       next => {
         this.alertify.success('You are logged in!');
       }, error => {
-        this.alertify.error(error);
+        // this.alertify.error(error);
+        console.log(error);
       }
     );
   }
