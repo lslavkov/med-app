@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Med_App_API.Models;
 
 namespace Med_App_API.Dto
 {
