@@ -1,16 +1,45 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark" routerLinkActive="active">
-  <a class="navbar-brand" href="#">Med App</a>
+  <div class="container">
 
-  <ul class="navbar-nav mr-auto">
-    <li class="nav-item active">
-      <a class="nav-link">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link">Logout</a>
-    </li>
-  </ul>
-  <div routerLinkActive="active">
-    <button class="btn btn-secondary mr-3" routerLink="/login"> Sign In</button>
-    <button class="btn btn-primary" routerLink="/register">Sign Up</button>
+    <a class="navbar-brand" href="#">Med App</a>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link">Home</a>
+      </li>
+    </ul>
+
+    <div *ngIf="loggedIn()" ngbDropdown class="d-inline-block">
+      <button class="btn btn-primary" id="dropdownLoggedIn" ngbDropdownToggle>
+        <i class="fa fa-user mr-2"></i>{{authService.decodedToken?.email|titlecase|lowercase}}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownLoggedIn">
+        <button ngbDropdownItem><i class="fa fa-user mr-2"></i>Profile</button>
+        <button ngbDropdownItem (click)="loggedOut()"><i class="fa fa-sign-out mr-2"></i>Log out</button>
+      </div>
+    </div>
+
+    <div *ngIf="!loggedIn()" ngbDropdown routerLinkActive="active">
+      <button class="btn btn-secondary mr-2" id="dropdownForm" ngbDropdownToggle>Sign In</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownForm1" style="left: -60px">
+        <form #loginForm="ngForm" class="px-4 py-3" (ngSubmit)="login()">
+          <div class="form-group">
+            <label for="email-form-group">Email address</label>
+            <input type="email" class="form-control" id="email-form-group" name="email" placeholder="email@example.com"
+                   required
+                   [(ngModel)]="model.email">
+          </div>
+          <div class="form-group">
+            <label for="password-form-group">Password</label>
+            <input type="password" class="form-control" id="password-form-group" name="password" placeholder="Password"
+                   [(ngModel)]="model.password">
+          </div>
+          <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+        <div class="dropdown-divider"></div>
+        <button ngbDropdownItem>Forgot password?</button>
+      </div>
+      <button *ngIf="!loggedIn()" class="btn btn-primary" routerLink="/register">Sign Up</button>
+    </div>
   </div>
 </nav>
