@@ -13,6 +13,8 @@ import {FooterComponent} from './footer/footer.component';
 import {JwtModule} from "@auth0/angular-jwt";
 import {ErrorInterceptorProvider} from "./_service/error.interceptor";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import {UserProfileResolver} from "./_resolvers/user-profile.resolver";
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -24,7 +26,8 @@ export function tokenGetter() {
     NavComponent,
     RegisterComponent,
     HomeComponent,
-    FooterComponent
+    FooterComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +46,8 @@ export function tokenGetter() {
     NgbModule
   ],
   providers: [
-    ErrorInterceptorProvider
+    ErrorInterceptorProvider,
+    UserProfileResolver
   ],
   bootstrap: [AppComponent]
 })

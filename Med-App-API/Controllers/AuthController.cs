@@ -38,7 +38,7 @@ namespace Med_App_API.Controllers
         public async Task<IActionResult> RegisterUser(UserForRegisterDto userForRegisterDto)
         {
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
-            
+
             var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
             if (result.Succeeded)
@@ -100,6 +100,5 @@ namespace Med_App_API.Controllers
 
             return tokenHandler.WriteToken(token);
         }
-
     }
 }

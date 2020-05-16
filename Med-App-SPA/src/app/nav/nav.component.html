@@ -14,7 +14,7 @@
         <i class="fa fa-user mr-2"></i>{{authService.decodedToken?.email|titlecase|lowercase}}
       </button>
       <div ngbDropdownMenu aria-labelledby="dropdownLoggedIn">
-        <button ngbDropdownItem><i class="fa fa-user mr-2"></i>Profile</button>
+        <button ngbDropdownItem [routerLink]="['/editUser']"><i class="fa fa-user mr-2"></i>Profile</button>
         <button ngbDropdownItem (click)="loggedOut()"><i class="fa fa-sign-out mr-2"></i>Log out</button>
       </div>
     </div>

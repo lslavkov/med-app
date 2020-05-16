@@ -72,6 +72,8 @@ namespace Med_App_API
                 opt.AddPolicy("RequiredNurseRole", policy => policy.RequireRole("Nurse"));
                 opt.AddPolicy("Patient", policy => policy.RequireRole("Patient"));
             });
+            services.AddAutoMapper(typeof(MedicalRepository).Assembly);
+            services.AddScoped<IMedicalRepository, MedicalRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
