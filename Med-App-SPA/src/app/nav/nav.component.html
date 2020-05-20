@@ -1,11 +1,14 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark" routerLinkActive="active">
   <div class="container">
 
-    <a class="navbar-brand" href="#">Med App</a>
+    <a class="navbar-brand">Med App</a>
 
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link">Home</a>
+    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/home']">Home</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/appointment']">Appointment</a>
       </li>
     </ul>
 
@@ -14,7 +17,7 @@
         <i class="fa fa-user mr-2"></i>{{authService.decodedToken?.email|titlecase|lowercase}}
       </button>
       <div ngbDropdownMenu aria-labelledby="dropdownLoggedIn">
-        <button ngbDropdownItem [routerLink]="['/editUser']"><i class="fa fa-user mr-2"></i>Profile</button>
+        <button ngbDropdownItem [routerLink]="['/user/edit']"><i class="fa fa-user mr-2"></i>Profile</button>
         <button ngbDropdownItem (click)="loggedOut()"><i class="fa fa-sign-out mr-2"></i>Log out</button>
       </div>
     </div>

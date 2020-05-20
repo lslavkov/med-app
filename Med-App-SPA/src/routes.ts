@@ -1,26 +1,21 @@
 import {Routes} from "@angular/router";
 import {HomeComponent} from "./app/home/home.component";
-import {RegisterComponent} from "./app/register/register.component";
-import {UserProfileComponent} from "./app/user/user-profile/user-profile.component";
-import {UserProfileResolver} from "./app/_resolvers/user-profile.resolver";
+import {AppointmentComponent} from "./app/appointment/appointment.component";
+import {AuthGuard} from "./app/_guards/auth.guard";
+import {UserEditResolver} from "./app/_resolvers/user-profile.resolver";
+import {UserEditComponent} from "./app/user/user-edit/user-edit.component";
 
 export const appRoutes: Routes = [
+  {path: 'home', component: HomeComponent},
   {
     path: '',
-    component: HomeComponent
-  },
-  {
-    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     children: [
-      {
-        path: 'register',
-        component: RegisterComponent
-      },
-      {
-        path: 'editUser',
-        component: UserProfileComponent,
-        resolve: {user: UserProfileResolver}
-      }
+      {path: 'appointment', component: AppointmentComponent},
+      {path: 'user/edit', component: UserEditComponent, resolve: {users: UserEditResolver}}
     ]
-  }
+  },
+  {path: '**', redirectTo: 'home', pathMatch: 'full'}
+
 ];

@@ -4,12 +4,6 @@ import {Observable} from "rxjs";
 import {User} from "../_models/user";
 import {environment} from "../../environments/environment";
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Authorization': 'Bearer ' + localStorage.getItem('token')
-  })
-};
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +14,6 @@ export class UserService {
   }
 
   getUser(id): Observable<User> {
-    return this.http.get<User>(this.baseUrl + 'user/' + id, httpOptions);
+    return this.http.get<User>(this.baseUrl + 'user/' + id);
   }
 }

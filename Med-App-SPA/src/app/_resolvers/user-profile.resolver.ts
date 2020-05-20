@@ -8,16 +8,15 @@ import {Observable, of} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 @Injectable()
-export class UserProfileResolver implements Resolve<User> {
+export class UserEditResolver implements Resolve<User> {
   constructor(private userService: UserService, private authService: AuthService, private router: Router, private alertify: AlertifyService) {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User> | Promise<User> | User {
     return this.userService.getUser(this.authService.decodedToken.nameid).pipe(
       catchError(errorCatch => {
-        console.log(this.authService.decodedToken.id);
         this.alertify.error('Problem retreving data');
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
         return of(null)
       })
     );
