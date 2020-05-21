@@ -37,12 +37,25 @@ namespace Med_App_API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(UserForRegisterDto userForRegisterDto)
         {
+            userForRegisterDto.UserName = GenerateUserName(userForRegisterDto.FirstName, userForRegisterDto.LastName);
+
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
             var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
             if (result.Succeeded)
             {
+                if (userForRegisterDto.Email.EndsWith("@utb.cz"))
+                {
+                    var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
+                    await _userManager.AddToRoleAsync(user, "Physician");
+                }
+                else
+                {
+                    var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
+                    await _userManager.AddToRoleAsync(user, "Patient");
+                }
+
                 return Ok();
             }
 
@@ -67,6 +80,9 @@ namespace Med_App_API.Controllers
 
             return Unauthorized();
         }
+
+        private string GenerateUserName(string firstName, string lastName) =>
+            firstName.ToLower().Substring(0, 1) + lastName.ToLower().Substring(0, 4);
 
         private async Task<string> GenerateJwtToken(User user)
         {
