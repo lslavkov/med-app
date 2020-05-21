@@ -11,7 +11,6 @@ import {NgForm} from "@angular/forms";
 export class UserEditComponent implements OnInit {
   @ViewChild('editForm', { static: true }) editForm: NgForm;
   user: User;
-  photoUrl: string;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editForm.dirty) {
@@ -29,6 +28,10 @@ export class UserEditComponent implements OnInit {
   }
 
   updateUser() {
+
+  }
+
+  updateEmail() {
 
   }
 }
