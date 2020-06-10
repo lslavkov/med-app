@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Med_App_API.Data;
 using Med_App_API.Dto;
 using Med_App_API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Med_App_API.Controllers
 {
@@ -24,20 +19,23 @@ namespace Med_App_API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IMapper _mapper;
+        private readonly IAuthRepository _authRepository;
 
         public AuthController(IConfiguration config, UserManager<User> userManager, SignInManager<User> signInManager,
-            IMapper mapper)
+            IMapper mapper, IAuthRepository authRepository)
         {
             _config = config;
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _authRepository = authRepository;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(UserForRegisterDto userForRegisterDto)
         {
-            userForRegisterDto.UserName = GenerateUserName(userForRegisterDto.FirstName, userForRegisterDto.LastName);
+            userForRegisterDto.UserName =
+                _authRepository.GenerateUserName(userForRegisterDto.FirstName, userForRegisterDto.LastName);
 
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
@@ -45,6 +43,8 @@ namespace Med_App_API.Controllers
 
             if (result.Succeeded)
             {
+                await _authRepository.GenerateConfirmEmail(userToCreate);
+                
                 if (userForRegisterDto.Email.EndsWith("@utb.cz"))
                 {
                     var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
@@ -73,7 +73,7 @@ namespace Med_App_API.Controllers
                 var appUser = _mapper.Map<UserForListDto>(user);
                 return Ok(new
                 {
-                    token = GenerateJwtToken(user).Result,
+                    token = _authRepository.GenerateJwtToken(user).Result,
                     user = appUser
                 });
             }
@@ -81,40 +81,34 @@ namespace Med_App_API.Controllers
             return Unauthorized();
         }
 
-        private string GenerateUserName(string firstName, string lastName) =>
-            firstName.ToLower().Substring(0, 1) + lastName.ToLower().Substring(0, 4);
+        // [HttpGet("email/verify/password")]
+        // public async Task<IActionResult> ConfirmPasswordChanging(string userid, string token)
+        // {
+        //     if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrWhiteSpace(token))
+        //         return NotFound();
+        //     
+        //     var result = await _authRepository.GenerateConfirmEmail(userid,token);
+        //     if (result.IsSuccess)
+        //     {
+        //         return Redirect($"{_config["SPAUrl"]}/confirm");
+        //     }
+        //
+        //     return BadRequest(result);
+        // }
 
-        private async Task<string> GenerateJwtToken(User user)
+        [HttpGet("email/verify/account")]
+        public async Task<IActionResult> ConfirmEmail(string userid, string token)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
+            if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrWhiteSpace(token))
+                return NotFound();
 
-            var roles = await _userManager.GetRolesAsync(user);
-
-            foreach (var role in roles)
+            var result = await _authRepository.ConfirmEmailAsync(userid,token);
+            if (result.IsSuccess)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                return Redirect($"{_config["SPAUrl"]}/confirm");
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
+            return BadRequest(result);
         }
     }
 }

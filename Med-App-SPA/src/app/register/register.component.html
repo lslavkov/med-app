@@ -39,36 +39,6 @@
 
     <div class="form-group">
       <input
-        type="text"
-        class="form-control"
-        formControlName="userName"
-        placeholder="UserName"
-        [ngClass]="{'is-invalid': registerForm.get('userName').errors && registerForm.get('userName').touched}"
-      />
-      <div class="invalid-feedback" *ngIf="
-        registerForm.get('userName').hasError('required') &&
-        registerForm.get('userName').touched"
-      >
-        Username is required
-      </div>
-
-      <div class="invalid-feedback" *ngIf="
-        registerForm.get('userName').hasError('minlength') &&
-        registerForm.get('userName').touched"
-      >
-      Username cannot be less than 6 characters
-      </div>
-
-      <div class="invalid-feedback" *ngIf="
-        registerForm.get('userName').hasError('maxlength') &&
-        registerForm.get('userName').touched"
-      >
-        Username cannot be more than 6 characters
-      </div>
-    </div>
-
-    <div class="form-group">
-      <input
         type="password"
         class="form-control"
         formControlName="password"
