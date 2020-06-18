@@ -12,7 +12,7 @@ export class UserEditResolver implements Resolve<User> {
   constructor(private userService: UserService, private authService: AuthService, private router: Router, private alertify: AlertifyService) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User> | Promise<User> | User {
+  resolve(route: ActivatedRouteSnapshot): Observable<User>{
     return this.userService.getUser(this.authService.decodedToken.nameid).pipe(
       catchError(errorCatch => {
         this.alertify.error('Problem retreving data');

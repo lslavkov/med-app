@@ -16,4 +16,12 @@ export class UserService {
   getUser(id): Observable<User> {
     return this.http.get<User>(this.baseUrl + 'user/' + id);
   }
+
+  changePassword(user): Observable<User> {
+    return this.http.post<User>(this.baseUrl + 'user/change/password', user);
+  }
+
+  updateUser(id: number, user: User) {
+    return this.http.put(this.baseUrl + 'user/change/' + id, user)
+  }
 }

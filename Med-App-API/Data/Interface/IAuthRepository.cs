@@ -6,6 +6,7 @@ namespace Med_App_API.Data
 {
     public interface IAuthRepository
     {
+        Task<User> GetUser(int id);
         string GenerateUserName(string firstName, string lastName);
         Task<string> GenerateJwtToken(User user);
         Task<UserManagerResponse> GeneratePasswordEmail(User user);

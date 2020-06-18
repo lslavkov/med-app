@@ -11,6 +11,7 @@ using Med_App_API.Models;
 using Med_App_API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,12 +22,21 @@ namespace Med_App_API.Data
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _config;
         private readonly IMailService _mailService;
+        private readonly DataContext _context;
 
-        public AuthRepository(UserManager<User> userManager, IConfiguration config, IMailService mailService)
+        public AuthRepository(UserManager<User> userManager, IConfiguration config, IMailService mailService, DataContext context)
         {
             _userManager = userManager;
             _config = config;
             _mailService = mailService;
+            _context = context;
+        }
+        
+        public async Task<User> GetUser(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            return user;
         }
 
         public string GenerateUserName(string firstName, string lastName) =>

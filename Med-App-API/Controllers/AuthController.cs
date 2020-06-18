@@ -44,7 +44,7 @@ namespace Med_App_API.Controllers
             if (result.Succeeded)
             {
                 await _authRepository.GenerateConfirmEmail(userToCreate);
-                
+
                 if (userForRegisterDto.Email.EndsWith("@utb.cz"))
                 {
                     var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
@@ -102,7 +102,7 @@ namespace Med_App_API.Controllers
             if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrWhiteSpace(token))
                 return NotFound();
 
-            var result = await _authRepository.ConfirmEmailAsync(userid,token);
+            var result = await _authRepository.ConfirmEmailAsync(userid, token);
             if (result.IsSuccess)
             {
                 return Redirect($"{_config["SPAUrl"]}/confirm");

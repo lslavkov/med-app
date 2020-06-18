@@ -11,6 +11,7 @@ namespace Med_App_API.Helper
             CreateMap<User,UserForListDto>();
             CreateMap<User,UserForDetailedDto>();
             CreateMap<UserForRegisterDto,User>();
+            CreateMap <UserForUpdateDto,User>();
         }       
     }
 }
