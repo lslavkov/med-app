@@ -33,6 +33,14 @@ namespace Med_App_API
 
             ConfigureServices(services);
         }
+        
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContextPool<DataContext>(x =>
+                x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+
+            ConfigureServices(services);
+        }
 
         public IConfiguration Configuration { get; }
 

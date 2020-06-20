@@ -85,6 +85,15 @@
               </div>
             </ng-template>
           </ng-container>
+          <ng-container ngbNavItem>
+            <a ngbNavLink>Account settings</a>
+              <ng-template ngbNavContent>
+                <div class="m-3">
+                  <h4>Deleting account</h4>
+                  <button class="btn btn-primary"></button>
+                </div>
+              </ng-template>
+          </ng-container>
         </nav>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>

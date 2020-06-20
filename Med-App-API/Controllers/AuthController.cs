@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Med_App_API.Data;
@@ -66,17 +67,25 @@ namespace Med_App_API.Controllers
         public async Task<IActionResult> LoginUser(UserForLoginDto userForLoginDto)
         {
             var user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
-            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
-
-            if (result.Succeeded)
+            if (user.EmailConfirmed)
             {
-                var appUser = _mapper.Map<UserForListDto>(user);
-                return Ok(new
+                var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
+
+                if (result.Succeeded)
                 {
-                    token = _authRepository.GenerateJwtToken(user).Result,
-                    user = appUser
-                });
+                    var appUser = _mapper.Map<UserForListDto>(user);
+                    return Ok(new
+                    {
+                        token = _authRepository.GenerateJwtToken(user).Result,
+                        user = appUser
+                    });
+                }
             }
+            else
+            {
+                throw new Exception("This account has not being verified. Please verify your account!");
+            }
+
 
             return Unauthorized();
         }
