@@ -22,7 +22,8 @@ namespace Med_App_API.Services
             var from = new EmailAddress("l_slavkovic_raco@utb.cz", "Bachelor Med-App");
             var to = new EmailAddress(toEmail);
             var msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
-            var response = await client.SendEmailAsync(msg);
+
+            await client.SendEmailAsync(msg);
         }
     }
 }

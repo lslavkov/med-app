@@ -1,10 +1,13 @@
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../../_models/user";
-import {ActivatedRoute} from "@angular/router";
-import {FormBuilder, FormGroup, FormGroupDirective, NgForm, Validators} from "@angular/forms";
+import {ActivatedRoute, Router} from "@angular/router";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../_service/user.service";
 import {AlertifyService} from "../../_service/alertify.service";
 import {AuthService} from "../../_service/auth.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {GdprService} from "../../_service/gdpr.service";
+import {Local} from "protractor/built/driverProviders";
 
 @Component({
   selector: 'app-user-edit',
@@ -20,8 +23,16 @@ export class UserEditComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private userService: UserService,
               private alertify: AlertifyService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private modal: NgbModal,
+              private gdprService: GdprService,
+              private route: Router) {
 
+  }
+
+
+  openModalDelete(content) {
+    this.modal.open(content, {backdropClass: 'light-blue-backdrop'})
   }
 
   createEditPasswordForm() {
@@ -78,5 +89,12 @@ export class UserEditComponent implements OnInit {
         this.alertify.error(error)
       });
     }
+  }
+
+  deleteAccount() {
+    this.gdprService.deleteAccount(this.authService.decodedToken.nameid).subscribe(() => {
+      this.route.navigate(['/home']).then(r => localStorage.clear())
+      this.alertify.success('This account is being removed')
+    })
   }
 }

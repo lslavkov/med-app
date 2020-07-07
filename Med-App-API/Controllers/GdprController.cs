@@ -1,7 +1,6 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Med_App_API.Data;
 using Med_App_API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,17 +13,10 @@ namespace Med_App_API.Controllers
     [AllowAnonymous]
     public class GdprController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly IAuthRepository _authRepository;
-        private readonly IMedicalRepository _medicalRepository;
         private readonly UserManager<User> _userManager;
 
-        public GdprController(DataContext context, IAuthRepository authRepository, IMedicalRepository medicalRepository,
-            UserManager<User> userManager)
+        public GdprController(UserManager<User> userManager)
         {
-            _context = context;
-            _authRepository = authRepository;
-            _medicalRepository = medicalRepository;
             _userManager = userManager;
         }
 
@@ -39,9 +31,7 @@ namespace Med_App_API.Controllers
             var result = await _userManager.DeleteAsync(user);
 
             if (result.Succeeded)
-            {
                 return NoContent();
-            }
 
             throw new Exception($"Something went wrong deleting user {id}");
         }
