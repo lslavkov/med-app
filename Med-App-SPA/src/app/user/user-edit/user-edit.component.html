@@ -3,12 +3,6 @@
     <div class="col-sm-4">
       <h1>Your Profile</h1>
     </div>
-    <!--    <div class="col-sm-8">-->
-    <!--      <div *ngIf="editForm.dirty" class="alert alert-info">-->
-    <!--        <strong>Information:</strong> You have made changes. Any unsaved changes-->
-    <!--        will be lost!-->
-    <!--      </div>-->
-    <!--    </div>-->
   </div>
   <div class="row">
     <div class="col-sm-4">
@@ -16,11 +10,11 @@
         <div class="card-body">
           <div>
             <strong>First name</strong>
-            <p>{{user?.first_name}}</p>
+            <p>{{user?.firstName}}</p>
           </div>
           <div>
             <strong>Last name</strong>
-            <p>{{user?.last_name}}</p>
+            <p>{{user?.lastName}}</p>
           </div>
           <div>
             <strong>E-mail</strong>
@@ -36,76 +30,87 @@
             <a ngbNavLink>Edit profile</a>
             <ng-template ngbNavContent>
               <div class="m-3">
-                <h4>Description</h4>
-                <br>
-                <h4 >Personal information</h4>
-                <form #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()">
-                  <div class="form-inline">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text">Fist name and last name</div>
-                      </div>
-                      <input #userFirst type="text" class="form-control" [(ngModel)]="user.first_name">
-                      <input #userLast type="text" class="form-control" [(ngModel)]="user.last_name">
-                    </div>
+                <form [formGroup]="editForm" (ngSubmit)="updateUser()">
+                  <h4>Profile basic info</h4>
+                  <div class="form-group">
+                    <div>{{user.firstName}}</div>
+                    <input type="text"
+                           class="form-control"
+                           name="first-name"
+                           placeholder="First Name"
+                           formControlName="firstName"
+                           [ngClass]="{'is-invalid': editForm.get('firstName').errors && editForm.get('firstName').touched}">
+                    <div class="invalid-feedback">Please enter your first name password</div>
                   </div>
-                  <div class="form-group text-right mt-2">
-                    <button class="btn-btn-success" type="submit" [disabled]="!editForm.dirty">Submit</button>
+                  <div class="form-group">
+                    <div>{{user.lastName}}</div>
+                    <input type="text"
+                           class="form-control"
+                           name="Last-name"
+                           placeholder="Last Name"
+                           formControlName="lastName"
+                           [ngClass]="{'is-invalid': editForm.get('lastName').errors && editForm.get('lastName').touched}">
+                    <div class="invalid-feedback">Please enter your last name password</div>
                   </div>
+
+                  <div class="form-group text-left mt-2">
+                    <button class="btn btn-success" type="submit" [disabled]="!editForm.valid">Submit</button>
+                  </div>
+
                 </form>
-                {{userFirst.className}}
-                {{userLast.className}}
-                <br>
-                <h4>Login information</h4>
-                <form #emailForm="ngForm" id="emailForm" (ngSubmit)="updateEmail()">
-                  <div class="form-inline">
-                    <label for="new-email" class="mr-2 ml-2">New e-mail</label>
-                    <input type="email" class="form-control" name="new-email" id="new-email">
-                    <label for="confirm-email" class="mr-2 ml-2">Confirm e-mail</label>
-                    <input type="email" class="form-control" name="confirm-email" id="confirm-email">
+                <h4>Change password</h4>
+                <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+                  <div class="form-group">
+                    <input type="password"
+                           class="form-control"
+                           name="old-password"
+                           placeholder="Old Password"
+                           formControlName="oldPassword"
+                           [ngClass]="{'is-invalid': passwordForm.get('oldPassword').errors && passwordForm.get('oldPassword').touched}">
+                    <div class="invalid-feedback">Please enter your old password</div>
                   </div>
-                  <div class="form-group text-right mt-2">
-                    <button class="btn-btn-success" type="submit" [disabled]="!editForm.dirty">Submit</button>
+                  <div class="form-group">
+                    <input type="password"
+                           class="form-control"
+                           name="new-password"
+                           placeholder="New Password"
+                           formControlName="newPassword"
+                           [ngClass]="{'is-invalid': passwordForm.get('newPassword').errors && passwordForm.get('newPassword').touched}">
+                    <div class="invalid-feedback">Please enter your new password</div>
+                  </div>
+                  <div class="form-group text-left mt-2">
+                    <button class="btn btn-success" type="submit" [disabled]="!passwordForm.valid">Submit</button>
                   </div>
                 </form>
               </div>
-
             </ng-template>
           </ng-container>
           <ng-container ngbNavItem>
-            <a ngbNavLink>Two</a>
+            <a ngbNavLink>Account settings</a>
             <ng-template ngbNavContent>
-              <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
-                farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean
-                shorts
-                ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.
-                Keytar
-                helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes
-                anderson
-                8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party
-                scenester
-                stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
-            </ng-template>
-          </ng-container>
-          <ng-container ngbNavItem>
-            <a ngbNavLink>Three</a>
-            <ng-template ngbNavContent>
-              <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla
-                facilisi.
-                Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt eu, congue
-                et odio.
-                Duis pharetra et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie lectus ultrices et. Sed
-                diam urna,
-                egestas ut ipsum vel, volutpat volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl
-                enim, nec
-                tristique ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque
-                penatibus et
-                magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac lorem aliquet ultricies in
-                eget
-                neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+              <div class="m-3">
+                <h4>Deleting account</h4>
+                <button class="btn btn-secondary" (click)="openModalDelete(content)">Submit</button>
+              </div>
             </ng-template>
           </ng-container>
         </nav>
+<!--        <ng-template #content let-modal>-->
+<!--          <div class="modal-header">-->
+<!--            <h4 class="modal-title">Confirming</h4>-->
+<!--            <button class="close" type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">-->
+<!--              <span aria-hidden="true">&times;</span>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--          <div class="modal-body">-->
+<!--            <p>Are you sure that you want to delete account?</p>-->
+<!--            <p>After confirming you won't be able to register again under same e-mail you have at the moment registered-->
+<!--              under this account</p>-->
+<!--            <div class="modal-footer">-->
+<!--              <button type="submit" class="btn btn-danger" ngbAutofocus (click)="deleteAccount()">Yes</button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </ng-template>-->
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
     </div>

@@ -27,7 +27,9 @@ namespace Med_App_API.Data
                 {
                     Email = "admin@example.com",
                     UserName = "Admin",
-                    FirstName = "Admin"
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    EmailConfirmed = true
                 };
 
                 var result = userManager.CreateAsync(adminUser, "password").Result;

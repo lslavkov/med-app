@@ -8,12 +8,20 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class UserService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl + 'user/';
 
   constructor(private http: HttpClient) {
   }
 
   getUser(id): Observable<User> {
-    return this.http.get<User>(this.baseUrl + 'user/' + id);
+    return this.http.get<User>(this.baseUrl + id);
+  }
+
+  changePassword(user): Observable<User> {
+    return this.http.post<User>(this.baseUrl + 'change/password', user);
+  }
+
+  updateUser(id: number, user: User) {
+    return this.http.put(this.baseUrl + 'change/' + id, user)
   }
 }

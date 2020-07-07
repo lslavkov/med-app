@@ -12,10 +12,11 @@ import {appRoutes} from "../routes";
 import {FooterComponent} from './footer/footer.component';
 import {JwtModule} from "@auth0/angular-jwt";
 import {ErrorInterceptorProvider} from "./_service/error.interceptor";
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppointmentComponent } from './appointment/appointment.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {AppointmentComponent} from './appointment/appointment.component';
 import {UserEditComponent} from "./user/user-edit/user-edit.component";
 import {UserEditResolver} from "./_resolvers/user-profile.resolver";
+import {ConfirmComponent} from './confirm/confirm.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -29,7 +30,8 @@ export function tokenGetter() {
     HomeComponent,
     FooterComponent,
     UserEditComponent,
-    AppointmentComponent
+    AppointmentComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,

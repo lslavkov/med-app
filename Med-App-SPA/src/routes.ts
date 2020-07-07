@@ -4,6 +4,8 @@ import {AppointmentComponent} from "./app/appointment/appointment.component";
 import {AuthGuard} from "./app/_guards/auth.guard";
 import {UserEditResolver} from "./app/_resolvers/user-profile.resolver";
 import {UserEditComponent} from "./app/user/user-edit/user-edit.component";
+import {ConfirmComponent} from "./app/confirm/confirm.component";
+import {RegisterComponent} from "./app/register/register.component";
 
 export const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -16,6 +18,8 @@ export const appRoutes: Routes = [
       {path: 'user/edit', component: UserEditComponent, resolve: {users: UserEditResolver}}
     ]
   },
+  {path: 'confirm', component: ConfirmComponent},
+  {path: 'register', component: RegisterComponent},
   {path: '**', redirectTo: 'home', pathMatch: 'full'}
 
 ];

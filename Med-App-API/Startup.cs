@@ -4,6 +4,7 @@ using AutoMapper;
 using Med_App_API.Data;
 using Med_App_API.Helper;
 using Med_App_API.Models;
+using Med_App_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -32,6 +33,14 @@ namespace Med_App_API
 
             ConfigureServices(services);
         }
+        
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContextPool<DataContext>(x =>
+                x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+
+            ConfigureServices(services);
+        }
 
         public IConfiguration Configuration { get; }
 
@@ -44,7 +53,7 @@ namespace Med_App_API
                 opt.Password.RequiredLength = 8;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireUppercase = false;
-            });
+            }).AddRoles<Role>().AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
@@ -77,6 +86,8 @@ namespace Med_App_API
             });
             services.AddAutoMapper(typeof(MedicalRepository).Assembly);
             services.AddScoped<IMedicalRepository, MedicalRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddTransient<IMailService, MailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -111,6 +122,8 @@ namespace Med_App_API
 
             app.UseAuthorization();
             app.UseAuthentication();
+
+            app.UseStaticFiles();
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
