@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using AutoMapper;
 using Med_App_API.Data;
+using Med_App_API.Data.Interface;
 using Med_App_API.Helper;
 using Med_App_API.Models;
 using Med_App_API.Services;
@@ -33,7 +34,7 @@ namespace Med_App_API
 
             ConfigureServices(services);
         }
-        
+
         public void ConfigureProductionServices(IServiceCollection services)
         {
             services.AddDbContextPool<DataContext>(x =>
@@ -60,23 +61,28 @@ namespace Med_App_API
             builder.AddRoleManager<RoleManager<Role>>();
             builder.AddSignInManager<SignInManager<User>>();
             services.AddCors();
+           
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            services.AddControllers().AddNewtonsoftJson(opt => 
+            services.AddControllers().AddNewtonsoftJson(opt =>
             {
-                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                opt.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    .AddJwtBearer(options =>
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                            .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                                                                                .GetBytes(Configuration
+                                                                                          .GetSection(
+                                                                                              "AppSettings:Token")
+                                                                                          .Value)),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
+                    });
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("RequiredAdminRole", policy => policy.RequireRole("Admin"));
@@ -119,13 +125,12 @@ namespace Med_App_API
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseStaticFiles();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

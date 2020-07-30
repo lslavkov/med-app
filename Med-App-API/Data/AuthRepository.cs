@@ -5,13 +5,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
+using Med_App_API.Data.Interface;
 using Med_App_API.Helper;
 using Med_App_API.Models;
 using Med_App_API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,17 +31,6 @@ namespace Med_App_API.Data
             _context = context;
         }
         
-        public async Task<User> GetUser(int id)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-
-            return user;
-        }
-
-        public string GenerateUserName(string firstName, string lastName) =>
-            firstName.ToLower().Substring(0, 1) + lastName.ToLower().Substring(0, 4);
-
-
         public async Task<string> GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
@@ -66,7 +54,8 @@ namespace Med_App_API.Data
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
+                SigningCredentials = creds,
+                
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -75,8 +64,6 @@ namespace Med_App_API.Data
 
             return tokenHandler.WriteToken(token);
         }
-
-
         public async Task<UserManagerResponse> GeneratePasswordEmail(User user)
         {
             var emailToken = await _userManager.GeneratePasswordResetTokenAsync(user);
