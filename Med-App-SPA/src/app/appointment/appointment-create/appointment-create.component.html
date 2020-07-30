@@ -1,0 +1,36 @@
+<div class="container mt-5">
+  <form [formGroup]="appointmentForm" (ngSubmit)="book()">
+    <div class="form-group">
+      <input type="number"
+             class="form-control"
+             placeholder="Physician's Id"
+             formControlName="physicianFKId"
+             [ngClass]="{'is-invalid':
+             appointmentForm.get('physicianFKId').errors
+             && appointmentForm.get('physicianFKId').touched}">
+      <div class="invalid-feedback">Please enter physician's id</div>
+    </div>
+    <div class="form-group">
+      <input type="datetime-local"
+             class="form-control"
+             formControlName="startOfAppointment"
+             [ngClass]="{'is-invalid':
+             appointmentForm.get('startOfAppointment').errors
+             && appointmentForm.get('startOfAppointment').touched}">
+      <div class="invalid-feedback">Please enter date and time</div>
+    </div>
+
+    <div class="form-group">
+      <input type="text"
+             class="form-control"
+             formControlName="description">
+    </div>
+
+    <div class="form-group text-center">
+      <button class="btn btn-success"
+              type="submit"
+              [disabled]="!appointmentForm.valid">Submit</button>
+      <button class="btn btn-default" type="button" (click)="cancel()"></button>
+    </div>
+  </form>
+</div>

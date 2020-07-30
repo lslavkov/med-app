@@ -13,6 +13,10 @@ namespace Med_App_API.Data
         {
         }
 
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Physician> Physicians { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -35,6 +39,16 @@ namespace Med_App_API.Data
                     .WithMany(r => r.UserRoles)
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
+            });
+            builder.Entity<Appointment>(appointments =>
+            {
+            
+                appointments.HasOne(x => x.Patient)
+                            .WithMany(x => x.Appointments)
+                            .HasForeignKey(x => x.PatientFKId);
+                appointments.HasOne(x => x.Physician)
+                            .WithMany(x => x.Appointments)
+                            .HasForeignKey(x => x.PhysicianFKId);
             });
         }
     }

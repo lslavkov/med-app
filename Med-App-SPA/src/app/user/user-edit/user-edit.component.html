@@ -95,22 +95,22 @@
             </ng-template>
           </ng-container>
         </nav>
-<!--        <ng-template #content let-modal>-->
-<!--          <div class="modal-header">-->
-<!--            <h4 class="modal-title">Confirming</h4>-->
-<!--            <button class="close" type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">-->
-<!--              <span aria-hidden="true">&times;</span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--          <div class="modal-body">-->
-<!--            <p>Are you sure that you want to delete account?</p>-->
-<!--            <p>After confirming you won't be able to register again under same e-mail you have at the moment registered-->
-<!--              under this account</p>-->
-<!--            <div class="modal-footer">-->
-<!--              <button type="submit" class="btn btn-danger" ngbAutofocus (click)="deleteAccount()">Yes</button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </ng-template>-->
+        <ng-template #content let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Confirming</h4>
+            <button class="close" type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure that you want to delete account?</p>
+            <p>After confirming you won't be able to register again under same e-mail you have at the moment registered
+              under this account</p>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger" ngbAutofocus (click)="deleteAccount()">Yes</button>
+            </div>
+          </div>
+        </ng-template>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
     </div>

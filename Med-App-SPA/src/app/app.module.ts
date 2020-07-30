@@ -13,10 +13,14 @@ import {FooterComponent} from './footer/footer.component';
 import {JwtModule} from "@auth0/angular-jwt";
 import {ErrorInterceptorProvider} from "./_service/error.interceptor";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {AppointmentComponent} from './appointment/appointment.component';
 import {UserEditComponent} from "./user/user-edit/user-edit.component";
 import {UserEditResolver} from "./_resolvers/user-profile.resolver";
 import {ConfirmComponent} from './confirm/confirm.component';
+import {AppointmentListComponent} from './appointment/appointment-list/appointment-list.component';
+import {AppointmentCardComponent} from './appointment/appointment-card/appointment-card.component';
+import {HasRoleDirective} from './_directives/has-role.directive';
+import { AppointmentCreateComponent } from './appointment/appointment-create/appointment-create.component';
+import {DatePipe} from "@angular/common";
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -30,8 +34,11 @@ export function tokenGetter() {
     HomeComponent,
     FooterComponent,
     UserEditComponent,
-    AppointmentComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    AppointmentListComponent,
+    AppointmentCardComponent,
+    HasRoleDirective,
+    AppointmentCreateComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +47,7 @@ export function tokenGetter() {
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
     HttpClientModule,
+    NgbModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -51,7 +59,8 @@ export function tokenGetter() {
   ],
   providers: [
     ErrorInterceptorProvider,
-    UserEditResolver
+    UserEditResolver,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

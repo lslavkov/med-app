@@ -5,11 +5,13 @@ using AutoMapper;
 using Med_App_API.Data;
 using Med_App_API.Dto;
 using Med_App_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Med_App_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

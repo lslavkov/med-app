@@ -1,0 +1,24 @@
+.appointment-container {
+  border: 2px solid #ccc;
+  background-color: #eee;
+  border-radius: 5px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.appointment-container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.appointment-container span {
+  font-size: 15px;
+  margin-right: 15px;
+}
+
+@media (max-width: 500px) {
+  .appointment-container {
+    text-align: center;
+  }
+}
