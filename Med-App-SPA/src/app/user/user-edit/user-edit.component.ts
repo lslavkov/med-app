@@ -6,8 +6,6 @@ import {UserService} from "../../_service/user.service";
 import {AlertifyService} from "../../_service/alertify.service";
 import {AuthService} from "../../_service/auth.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {GdprService} from "../../_service/gdpr.service";
-import {Local} from "protractor/built/driverProviders";
 
 @Component({
   selector: 'app-user-edit',
@@ -25,7 +23,6 @@ export class UserEditComponent implements OnInit {
               private alertify: AlertifyService,
               private authService: AuthService,
               private modal: NgbModal,
-              private gdprService: GdprService,
               private route: Router) {
 
   }
@@ -58,7 +55,6 @@ export class UserEditComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.user = data['users'];
-      console.log(this.user);
     })
     this.createEditPasswordForm();
     this.createEditUserForm();
@@ -92,7 +88,7 @@ export class UserEditComponent implements OnInit {
   }
 
   deleteAccount() {
-    this.gdprService.deleteAccount(this.authService.decodedToken.nameid).subscribe(() => {
+    this.userService.deleteUser(this.authService.decodedToken.nameid).subscribe(() => {
       this.route.navigate(['/home']).then(r => localStorage.clear())
       this.alertify.success('This account is being removed')
     })

@@ -7,6 +7,7 @@ import {ConfirmComponent} from "./app/confirm/confirm.component";
 import {RegisterComponent} from "./app/register/register.component";
 import {AppointmentListComponent} from "./app/appointment/appointment-list/appointment-list.component";
 import {AppointmentCreateComponent} from "./app/appointment/appointment-create/appointment-create.component";
+import {AdminPanelComponent} from "./app/admin/admin-panel/admin-panel.component";
 
 export const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -17,7 +18,8 @@ export const appRoutes: Routes = [
     children: [
       {path: 'appointment', component: AppointmentListComponent, data: {roles: ['Patient', 'Physician']}},
       {path: 'user/edit', component: UserEditComponent, resolve: {users: UserEditResolver}},
-      {path: 'appointment/create', component: AppointmentCreateComponent}
+      {path: 'appointment/create', component: AppointmentCreateComponent},
+      {path: 'admin', component: AdminPanelComponent, data: {roles: ['Admin']}}
     ]
   },
   {path: 'confirm', component: ConfirmComponent},

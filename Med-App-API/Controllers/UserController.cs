@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Med_App_API.Data;
+using Med_App_API.Data.Interface;
 using Med_App_API.Dto;
 using Med_App_API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -62,6 +63,22 @@ namespace Med_App_API.Controllers
             if (result.Succeeded)
                 return Ok();
             return BadRequest(result);
+        }
+        
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            
+            string idString = id.ToString();
+            var user = await _userManager.FindByIdAsync(idString);
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+                return NoContent();
+
+            throw new Exception($"Something went wrong deleting user {id}");
         }
     }
 }

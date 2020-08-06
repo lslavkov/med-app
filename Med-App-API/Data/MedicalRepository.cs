@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Med_App_API.Data.Interface;
 using Med_App_API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,9 +48,7 @@ namespace Med_App_API.Data
 
         public async Task<Physician> GetPhysician(int id)
         {
-            var physician = await _context.Physicians.FirstOrDefaultAsync(u => u.Id == id);
-
-            return physician;
+            return await _context.Physicians.FirstOrDefaultAsync(u => u.UserFKId == id);
         }
         public async Task<Appointment> GetAppointment(int id)
         {
@@ -73,7 +72,7 @@ namespace Med_App_API.Data
         {
             var patientAppointments =
                 await _context.Appointments
-                              .Where(p => p.PatientFKId == id && p.StartOfAppointment > DateTime.Now)
+                              .Where(p => p.PhysicianFKId == id && p.StartOfAppointment > DateTime.Now)
                               .OrderByDescending(d => d.StartOfAppointment)
                               .ToListAsync();
 
