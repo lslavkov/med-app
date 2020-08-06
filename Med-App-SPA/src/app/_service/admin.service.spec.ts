@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GdprServiceService } from './gdpr-service.service';
+import { AdminService } from './admin.service';
 
-describe('GdprServiceService', () => {
-  let service: GdprServiceService;
+describe('AdminService', () => {
+  let service: AdminService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(GdprServiceService);
+    service = TestBed.inject(AdminService);
   });
 
   it('should be created', () => {

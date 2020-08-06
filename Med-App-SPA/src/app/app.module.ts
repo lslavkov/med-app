@@ -21,6 +21,14 @@ import {AppointmentCardComponent} from './appointment/appointment-card/appointme
 import {HasRoleDirective} from './_directives/has-role.directive';
 import { AppointmentCreateComponent } from './appointment/appointment-create/appointment-create.component';
 import {DatePipe} from "@angular/common";
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { AppointmentManagementComponent } from './admin/appointment-management/appointment-management.component';
+import {AuthService} from "./_service/auth.service";
+import {AlertifyService} from "./_service/alertify.service";
+import {UserService} from "./_service/user.service";
+import {AdminService} from "./_service/admin.service";
+import {MedicalService} from "./_service/medical.service";
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -39,6 +47,9 @@ export function tokenGetter() {
     AppointmentCardComponent,
     HasRoleDirective,
     AppointmentCreateComponent,
+    AdminPanelComponent,
+    UserManagementComponent,
+    AppointmentManagementComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +69,11 @@ export function tokenGetter() {
     NgbModule
   ],
   providers: [
+    AuthService,
+    AlertifyService,
+    UserService,
+    AdminService,
+    MedicalService,
     ErrorInterceptorProvider,
     UserEditResolver,
     DatePipe

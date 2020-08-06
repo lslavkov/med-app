@@ -13,7 +13,6 @@ export class HasRoleDirective implements OnInit {
 
   ngOnInit() {
     const userRoles = this.authService.decodedToken.role as Array<string>;
-    console.log(userRoles);
     if (!userRoles) {
       this.viewContainerRef.clear();
     }
@@ -27,7 +26,6 @@ export class HasRoleDirective implements OnInit {
           this.isVisible = false;
           this.viewContainerRef.clear();
         }
-        console.log(this.isVisible);
       }
     }
   }

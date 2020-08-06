@@ -24,4 +24,8 @@ export class UserService {
   updateUser(id: number, user: User) {
     return this.http.put(this.baseUrl + 'change/' + id, user)
   }
+
+  deleteUser(id: number) {
+    return this.http.delete(this.baseUrl + 'delete/' + id);
+  }
 }

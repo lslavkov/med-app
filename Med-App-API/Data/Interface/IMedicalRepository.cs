@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Med_App_API.Models;
 
-namespace Med_App_API.Data
+namespace Med_App_API.Data.Interface
 {
     public interface IMedicalRepository
     {

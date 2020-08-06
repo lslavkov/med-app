@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Med_App_API.Data;
+using Med_App_API.Data.Interface;
 using Med_App_API.Dto;
 using Med_App_API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -83,13 +84,11 @@ namespace Med_App_API.Controllers
             model.PatientFKId = patient.Id;
             model.EndOfAppointment = model.StartOfAppointment.AddMinutes(15);
 
-            var physicianId = model.PhysicianFKId;
-
-            var physicianUser = await _repo.GetPhysician(physicianId);
+            var physicianUser = await _context.Physicians.FirstOrDefaultAsync(u => u.Id == model.PhysicianFKId);
             var userPhysician = await _repo.GetUser(physicianUser.UserFKId);
 
-            model.PatientFullName = user.FirstName + " " + user.LastName;
-            model.PhysicianFullName = userPhysician.FirstName + " " + userPhysician.LastName;
+            model.PatientFullName = $"{user.FirstName} {user.LastName}";
+            model.PhysicianFullName = $"{userPhysician.FirstName} {userPhysician.LastName}";
 
             var appointment = _mapper.Map<Appointment>(model);
 
@@ -97,7 +96,7 @@ namespace Med_App_API.Controllers
 
             if (await _repo.SaveAll())
                 return NoContent();
-            
+
             throw new Exception("Failed on creating new appointment");
         }
 
