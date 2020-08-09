@@ -29,60 +29,7 @@
           <ng-container ngbNavItem>
             <a ngbNavLink>Edit profile</a>
             <ng-template ngbNavContent>
-              <div class="m-3">
-                <form [formGroup]="editForm" (ngSubmit)="updateUser()">
-                  <h4>Profile basic info</h4>
-                  <div class="form-group">
-                    <div>{{user.firstName}}</div>
-                    <input type="text"
-                           class="form-control"
-                           name="first-name"
-                           placeholder="First Name"
-                           formControlName="firstName"
-                           [ngClass]="{'is-invalid': editForm.get('firstName').errors && editForm.get('firstName').touched}">
-                    <div class="invalid-feedback">Please enter your first name password</div>
-                  </div>
-                  <div class="form-group">
-                    <div>{{user.lastName}}</div>
-                    <input type="text"
-                           class="form-control"
-                           name="Last-name"
-                           placeholder="Last Name"
-                           formControlName="lastName"
-                           [ngClass]="{'is-invalid': editForm.get('lastName').errors && editForm.get('lastName').touched}">
-                    <div class="invalid-feedback">Please enter your last name password</div>
-                  </div>
-
-                  <div class="form-group text-left mt-2">
-                    <button class="btn btn-success" type="submit" [disabled]="!editForm.valid">Submit</button>
-                  </div>
-
-                </form>
-                <h4>Change password</h4>
-                <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
-                  <div class="form-group">
-                    <input type="password"
-                           class="form-control"
-                           name="old-password"
-                           placeholder="Old Password"
-                           formControlName="oldPassword"
-                           [ngClass]="{'is-invalid': passwordForm.get('oldPassword').errors && passwordForm.get('oldPassword').touched}">
-                    <div class="invalid-feedback">Please enter your old password</div>
-                  </div>
-                  <div class="form-group">
-                    <input type="password"
-                           class="form-control"
-                           name="new-password"
-                           placeholder="New Password"
-                           formControlName="newPassword"
-                           [ngClass]="{'is-invalid': passwordForm.get('newPassword').errors && passwordForm.get('newPassword').touched}">
-                    <div class="invalid-feedback">Please enter your new password</div>
-                  </div>
-                  <div class="form-group text-left mt-2">
-                    <button class="btn btn-success" type="submit" [disabled]="!passwordForm.valid">Submit</button>
-                  </div>
-                </form>
-              </div>
+              <app-user-edit-profil [user]="user"></app-user-edit-profil>
             </ng-template>
           </ng-container>
           <ng-container ngbNavItem>
@@ -92,6 +39,12 @@
                 <h4>Deleting account</h4>
                 <button class="btn btn-secondary" (click)="openModalDelete(content)">Submit</button>
               </div>
+            </ng-template>
+          </ng-container>
+          <ng-container *appHasRole="['Physician']" ngbNavItem>
+            <a ngbNavLink>Work hours</a>
+            <ng-template ngbNavContent>
+              <app-physician-work></app-physician-work>
             </ng-template>
           </ng-container>
         </nav>

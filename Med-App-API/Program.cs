@@ -24,7 +24,7 @@ namespace Med_App_API
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<Role>>();
                     context.Database.Migrate();
-                    Seed.SeedUsersAndRoles(userManager, roleManager);
+                    Seed.SeedUsersAndRoles(userManager, roleManager, context);
                 }
                 catch (Exception ex)
                 {

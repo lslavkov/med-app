@@ -1,0 +1,43 @@
+<div class="container mt-3 mb-3">
+  <button class="btn btn-secondary btn-" (click)="openModalDelete(content)">Add vaccine</button>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Adding new vaccine</h4>
+      <button class="close" type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="vaccineForm" (ngSubmit)="addNewVaccine()">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text"
+                   class="form-control"
+                   formControlName="name"
+                   placeholder="Enter new vaccine"
+                   [ngClass]="{'is-invalid': vaccineForm.get('name').errors
+                   &&vaccineForm.get('name').touched}">
+            <div class="invalid-feedback">Please enter name of vaccine</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-danger" [disabled]="!vaccineForm.valid" ngbAutofocus>Submit</button>
+      </div>
+      </form>
+
+    </div>
+  </ng-template>
+</div>
+<div class="row">
+  <table class="table">
+    <tr>
+      <th style="width: 50%">Id</th>
+      <th style="width: 50%">Name</th>
+    </tr>
+    <tr *ngFor="let item of vaccines">
+      <td>{{item.id}}</td>
+      <td>{{item.name}}</td>
+    </tr>
+  </table>
+</div>
+

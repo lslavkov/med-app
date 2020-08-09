@@ -1,0 +1,51 @@
+<div class="container mt-5">
+  <form [formGroup]="vaccinationRecord" (ngSubmit)="record()">
+    <div class="form-row">
+      <div class="form-group col-sm-6">
+        <select class="form-control" formControlName="patientFKId">
+          <option selected>Choose patient...</option>
+          <option *ngFor="let item of patients" [value]="item.id">{{item.fullName}}</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-6">
+        <select class="form-control" formControlName="vacinesFKId">
+          <option selected>Choose vaccine...</option>
+          <option *ngFor="let item of vaccines" [value]="item.id">{{item.name}}</option>
+        </select>
+      </div>
+      <div class="form-group"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <div class="input-group">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+          </button>
+          <input [markDisabled]="markDisabled" class="form-control"
+                 placeholder="yyyy-mm-dd"
+                 name="dp" ngbDatepicker #d="ngbDatepicker" formControlName="timeOfVaccination">
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <select class="form-control" formControlName="dosageMl">
+          <option selected>Choose dosage...</option>
+          <option *ngFor="let item of dosage" [value]="item.dosage">{{item.dosage}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="text" formControlName="description" class="form-control">
+    </div>
+    <div class="form-group text-center">
+      <button
+        class="btn btn-success"
+        type="submit"
+      >
+        Create record
+      </button>
+      <button class="btn btn-default" type="button" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

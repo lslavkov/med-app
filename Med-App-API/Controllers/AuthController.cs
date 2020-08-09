@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Med_App_API.Data;
@@ -24,9 +25,11 @@ namespace Med_App_API.Controllers
         private readonly IMapper _mapper;
         private readonly IAuthRepository _authRepository;
         private readonly DataContext _dataContext;
+        private readonly IMedicalRepository _repo;
 
         public AuthController(IConfiguration config, UserManager<User> userManager, SignInManager<User> signInManager,
-                              IMapper mapper, IAuthRepository authRepository, DataContext dataContext)
+                              IMapper mapper, IAuthRepository authRepository, DataContext dataContext,
+                              IMedicalRepository repo)
         {
             _config = config;
             _userManager = userManager;
@@ -34,46 +37,31 @@ namespace Med_App_API.Controllers
             _mapper = mapper;
             _authRepository = authRepository;
             _dataContext = dataContext;
+            _repo = repo;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(UserForRegisterDto userForRegisterDto)
         {
-            // userForRegisterDto.UserName =
-            //     _authRepository.GenerateUserName(userForRegisterDto.FirstName, userForRegisterDto.LastName);
-
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
-            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+            var generatePassword = PasswordGenerator();
+            var result = await _userManager.CreateAsync(userToCreate, generatePassword);
 
             if (result.Succeeded)
             {
-                await _authRepository.GenerateConfirmEmail(userToCreate);
+                await _authRepository.GenerateConfirmEmail(userToCreate, generatePassword);
 
-                if (userForRegisterDto.Email.EndsWith("@utb.cz"))
+                var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
+                var userToPatient = _userManager.AddToRoleAsync(user, "Patient").Result;
+                if (userToPatient.Succeeded)
                 {
-                    var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
-                    var userToPhysician = _userManager.AddToRoleAsync(user, "Physician").Result;
-                    if (userToPhysician.Succeeded)
-                    {
-                        var physician = new Physician {UserFKId = user.Id};
-                        await _dataContext.Physicians.AddAsync(physician);
-                    }
-                }
-                else
-                {
-                    var user = _userManager.FindByEmailAsync(userForRegisterDto.Email).Result;
-                    var userToPatient = _userManager.AddToRoleAsync(user, "Patient").Result;
-                    if (userToPatient.Succeeded)
-                    {
-                        var patient = new Patient {UserFKId = user.Id};
-                        await _dataContext.Patients.AddAsync(patient);
-                    }
+                    var patient = new Patient {UserFKId = user.Id, FullName = $"{user.FirstName} {user.LastName}"};
+                    _repo.Add(patient);
                 }
 
-                await _dataContext.SaveChangesAsync();
-
-                return Ok();
+                if (await _repo.SaveAll())
+                    return Ok();
             }
 
             return BadRequest();
@@ -92,58 +80,43 @@ namespace Med_App_API.Controllers
                     var appUser = _mapper.Map<UserForListDto>(user);
                     var patientSearch = _dataContext.Patients.FirstOrDefault(x => x.UserFKId == appUser.Id);
                     var physicianSearch = _dataContext.Physicians.FirstOrDefault(x => x.UserFKId == appUser.Id);
-                    if (patientSearch != null)
+                    if (user.EmailConfirmed)
                     {
-                        var appPatient = _mapper.Map<PatientForListDto>(patientSearch);
+                        if (patientSearch != null)
+                        {
+                            var appPatient = _mapper.Map<PatientForListDto>(patientSearch);
+                            return Ok(new
+                            {
+                                token = _authRepository.GenerateJwtToken(user).Result,
+                                user = appUser,
+                                patient = appPatient
+                            });
+                        }
+
+                        if (physicianSearch != null)
+                        {
+                            var appPhysician = _mapper.Map<PhysicianForListDto>(physicianSearch);
+                            return Ok(new
+                            {
+                                token = _authRepository.GenerateJwtToken(user).Result,
+                                user = appUser,
+                                physician = appPhysician
+                            });
+                        }
+
                         return Ok(new
                         {
                             token = _authRepository.GenerateJwtToken(user).Result,
-                            user = appUser,
-                            patient = appPatient
+                            user = appUser
                         });
                     }
-
-                    if (physicianSearch != null)
-                    {
-                        var appPhysician = _mapper.Map<PhysicianForListDto>(physicianSearch);
-                        return Ok(new
-                        {
-                            token = _authRepository.GenerateJwtToken(user).Result,
-                            user = appUser,
-                            physician = appPhysician
-                        });
-                    }
-
-                    return Ok(new
-                    {
-                        token = _authRepository.GenerateJwtToken(user).Result,
-                        user = appUser
-                    });
                 }
+                else
+                    throw new Exception("This user has not verified e-mail. Please verify your email.");
             }
-            else
-            {
-                throw new Exception("This account has not being verified. Please verify your account!");
-            }
-
 
             return Unauthorized();
         }
-
-        // [HttpGet("email/verify/password")]
-        // public async Task<IActionResult> ConfirmPasswordChanging(string userid, string token)
-        // {
-        //     if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrWhiteSpace(token))
-        //         return NotFound();
-        //     
-        //     var result = await _authRepository.GenerateConfirmEmail(userid,token);
-        //     if (result.IsSuccess)
-        //     {
-        //         return Redirect($"{_config["SPAUrl"]}/confirm");
-        //     }
-        //
-        //     return BadRequest(result);
-        // }
 
         [HttpGet("email/verify/account")]
         public async Task<IActionResult> ConfirmEmail(string userid, string token)
@@ -158,6 +131,37 @@ namespace Med_App_API.Controllers
             }
 
             return BadRequest(result);
+        }
+
+        private string PasswordGenerator()
+        {
+            var builder = new StringBuilder();
+            builder.Append(RandomString(4, true));
+            builder.Append(RandomNumber(1000, 9999));
+            builder.Append(RandomString(2, false));
+            return builder.ToString();
+        }
+
+        private int RandomNumber(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
+        }
+
+        private string RandomString(int size, bool lowerCase)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
         }
     }
 }

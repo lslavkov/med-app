@@ -12,7 +12,7 @@ import {appRoutes} from "../routes";
 import {FooterComponent} from './footer/footer.component';
 import {JwtModule} from "@auth0/angular-jwt";
 import {ErrorInterceptorProvider} from "./_service/error.interceptor";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDatepicker, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {UserEditComponent} from "./user/user-edit/user-edit.component";
 import {UserEditResolver} from "./_resolvers/user-profile.resolver";
 import {ConfirmComponent} from './confirm/confirm.component';
@@ -29,6 +29,13 @@ import {AlertifyService} from "./_service/alertify.service";
 import {UserService} from "./_service/user.service";
 import {AdminService} from "./_service/admin.service";
 import {MedicalService} from "./_service/medical.service";
+import { UserEditProfilComponent } from './user/user-edit-profil/user-edit-profil.component';
+import { PhysicianWorkComponent } from './user/physician-work/physician-work.component';
+import { VaccinateListComponent } from './vaccinate/vaccinate-list/vaccinate-list.component';
+import { VaccinatePatientComponent } from './vaccinate/vaccinate-patient/vaccinate-patient.component';
+import { VaccinesManagementComponent } from './admin/vaccines-management/vaccines-management.component';
+import { PhysicianRegistrationComponent } from './admin/physician-registration/physician-registration.component';
+import { VaccinePublicListComponent } from './vaccinate/vaccine-public-list/vaccine-public-list.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -50,6 +57,13 @@ export function tokenGetter() {
     AdminPanelComponent,
     UserManagementComponent,
     AppointmentManagementComponent,
+    UserEditProfilComponent,
+    PhysicianWorkComponent,
+    VaccinateListComponent,
+    VaccinatePatientComponent,
+    VaccinesManagementComponent,
+    PhysicianRegistrationComponent,
+    VaccinePublicListComponent,
   ],
   imports: [
     BrowserModule,

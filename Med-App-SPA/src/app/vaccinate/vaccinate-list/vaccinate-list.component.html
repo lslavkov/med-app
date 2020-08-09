@@ -1,0 +1,20 @@
+<div class="text-center mt-3">
+  <h1>Your records of vaccinations</h1>
+</div>
+
+<div class="container">
+  <div class="row">
+    <table style="width: 70%" class="table auto-format ">
+      <tr>
+        <th style="width: 10%">Id</th>
+        <th style="width: 20%">Vaccine Id</th>
+        <th style="width: 30%">Date of vaccination</th>
+      </tr>
+      <tr *ngFor="let record of vaccineRecord">
+        <td>{{record.id}}</td>
+        <td>{{record.vacinesFKId}}</td>
+        <td>{{record.timeOfVaccination| date: 'longDate'}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

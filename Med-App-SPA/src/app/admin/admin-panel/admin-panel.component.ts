@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-admin-panel',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminPanelComponent implements OnInit {
 
-  constructor() { }
+  constructor(private modal: NgbModal) { }
 
   ngOnInit(): void {
+  }
+
+  openModalDelete(content) {
+    this.modal.open(content, {backdropClass: 'light-blue-backdrop'})
   }
 
 }

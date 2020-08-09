@@ -87,7 +87,6 @@ namespace Med_App_API
             {
                 opt.AddPolicy("RequiredAdminRole", policy => policy.RequireRole("Admin"));
                 opt.AddPolicy("RequiredPhysicianRole", policy => policy.RequireRole("Physician"));
-                opt.AddPolicy("RequiredNurseRole", policy => policy.RequireRole("Nurse"));
                 opt.AddPolicy("Patient", policy => policy.RequireRole("Patient"));
             });
             services.AddAutoMapper(typeof(MedicalRepository).Assembly);

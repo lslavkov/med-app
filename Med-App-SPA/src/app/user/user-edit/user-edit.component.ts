@@ -27,64 +27,14 @@ export class UserEditComponent implements OnInit {
 
   }
 
-
-  openModalDelete(content) {
-    this.modal.open(content, {backdropClass: 'light-blue-backdrop'})
-  }
-
-  createEditPasswordForm() {
-    this.passwordForm = this.fb.group(
-      {
-        oldPassword: ['', Validators.required],
-        newPassword: ['', Validators.required]
-      }, {validators: this.passwordValidator}
-    )
-  }
-
-  createEditUserForm() {
-    this.editForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required]
-    })
-  }
-
-  passwordValidator(g: FormGroup) {
-    return g.get('oldPassword').value !== g.get('newPassword').value ? null : {mismatch: true};
-  }
-
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.user = data['users'];
     })
-    this.createEditPasswordForm();
-    this.createEditUserForm();
   }
 
-  updateUser() {
-    if (this.editForm.valid) {
-      this.user = Object.assign({}, this.editForm.value);
-      this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(
-        next => {
-          this.alertify.success('Profile has being updated');
-          this.editForm.reset()
-          console.log(this.user);
-        }, error => {
-          this.alertify.error(error);
-        }
-      );
-    }
-  }
-
-  updatePassword() {
-    if (this.passwordForm.valid) {
-      this.user = Object.assign({}, this.passwordForm.value);
-      this.userService.changePassword(this.user).subscribe(() => {
-        this.alertify.success('Password was changed successfully');
-        this.passwordForm.reset();
-      }, error => {
-        this.alertify.error(error)
-      });
-    }
+  openModalDelete(content) {
+    this.modal.open(content, {backdropClass: 'light-blue-backdrop'})
   }
 
   deleteAccount() {
@@ -93,4 +43,6 @@ export class UserEditComponent implements OnInit {
       this.alertify.success('This account is being removed')
     })
   }
+
+
 }

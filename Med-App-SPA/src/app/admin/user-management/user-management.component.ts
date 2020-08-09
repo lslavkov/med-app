@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {AdminService} from "../../_service/admin.service";
 import {User} from "../../_models/user";
 import {AlertifyService} from "../../_service/alertify.service";
-import {AuthService} from "../../_service/auth.service";
 
 @Component({
   selector: 'app-user-management',

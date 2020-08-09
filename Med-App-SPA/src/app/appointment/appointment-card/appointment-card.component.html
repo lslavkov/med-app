@@ -3,6 +3,7 @@
     <p *appHasRole="['Patient']">Physician: <span>{{appointment.physicianFullName}}</span></p>
     <p *appHasRole="['Physician']">Patient: <span>{{appointment.patientFullName}}</span></p>
     <p>Date of appointment: <span>{{appointment.startOfAppointment | date: 'short'}}</span></p>
+    <p>Type of appointment: <span>{{appointment.typeOfAppointment}}</span></p>
     <p>Description: <span>{{appointment.description}}</span></p>
     <button type="submit" class="btn btn-danger" *appHasRole="['Patient']" (click)="deleteAppointment(appointment.id)">
       Delete

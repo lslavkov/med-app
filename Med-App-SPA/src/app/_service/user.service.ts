@@ -28,4 +28,12 @@ export class UserService {
   deleteUser(id: number) {
     return this.http.delete(this.baseUrl + 'delete/' + id);
   }
+
+  getPhysicians(){
+    return this.http.get(this.baseUrl + 'get/physicians');
+  }
+
+  getPatients(){
+    return this.http.get(this.baseUrl + 'get/patients');
+  }
 }

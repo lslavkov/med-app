@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -45,7 +46,6 @@ namespace Med_App_API.Controllers
                 return Unauthorized();
 
             var userFromRepo = await _repo.GetUser(id);
-
             _mapper.Map(model, userFromRepo);
 
             if (await _repo.SaveAll())
@@ -64,13 +64,33 @@ namespace Med_App_API.Controllers
                 return Ok();
             return BadRequest(result);
         }
-        
+
+        [HttpGet("get/physicians")]
+        public async Task<IActionResult> GetPhysicians()
+        {
+            var physicians = await _repo.GetPhysicians();
+
+            var physiciansToReturn = _mapper.Map<IEnumerable<PhysicianForListDto>>(physicians);
+            
+            return Ok(physiciansToReturn);
+        }
+
+        [HttpGet("get/patients")]
+        public async Task<IActionResult> GetPatients()
+        {
+            var patients = await _repo.GetPatients();
+
+            var patientsToReturn = _mapper.Map<IEnumerable<PatientForListDto>>(patients);
+
+            return Ok(patientsToReturn);
+        }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            
+
             string idString = id.ToString();
             var user = await _userManager.FindByIdAsync(idString);
             var result = await _userManager.DeleteAsync(user);

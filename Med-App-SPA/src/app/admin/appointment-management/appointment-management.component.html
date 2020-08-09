@@ -6,6 +6,7 @@
       <th style="width: 15%">Patient</th>
       <th style="width: 20%">Start of appointment</th>
       <th style="width: 20%">End of appointment</th>
+      <th style="width: 20%">Type of appointment</th>
       <th style="width: 20%">Description</th>
     </tr>
     <tr *ngFor="let appointment of appointments">
@@ -14,6 +15,7 @@
       <td>{{appointment.patientFullName}}</td>
       <td>{{appointment.startOfAppointment | date: 'short'}}</td>
       <td>{{appointment.endOfAppointment | date : 'short'}}</td>
+      <td>{{appointment.typeOfAppointment}}</td>
       <td>{{appointment.description}}</td>
     </tr>
   </table>

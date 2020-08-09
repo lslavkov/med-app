@@ -18,6 +18,9 @@ namespace Med_App_API.Helper
             CreateMap<AppointmentForCreatingDto, Appointment>().ReverseMap();
             CreateMap<Appointment, AppointmentPatientForListDto>();
             CreateMap<Appointment, AppointmentPhysicianForListDto>();
+            CreateMap<PatientVaccinated, PatientsVaccinatesForListDto>();
+            CreateMap<PatientsVaccinatesForCreation, PatientVaccinated>().ReverseMap();
+            CreateMap<VaccineForCreationDto, Vaccines>().ReverseMap();
         }
     }
 }

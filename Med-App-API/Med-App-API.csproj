@@ -21,4 +21,16 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.2" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="Data\PhysicianSeedData.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Data\VaccinesSeedData.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

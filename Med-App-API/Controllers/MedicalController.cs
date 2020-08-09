@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Castle.Core.Internal;
 using Med_App_API.Data;
 using Med_App_API.Data.Interface;
 using Med_App_API.Dto;
@@ -64,7 +65,7 @@ namespace Med_App_API.Controllers
 
             return BadRequest();
         }
-
+        
         [HttpPost("create/user/{id}/appointment")]
         public async Task<IActionResult> CreatePatientAppointment(int id, AppointmentForCreatingDto model)
         {
@@ -99,16 +100,61 @@ namespace Med_App_API.Controllers
 
             throw new Exception("Failed on creating new appointment");
         }
-
+        
+        [Authorize(Policy = "RequiredPhysicianRole")]
         [HttpGet("get/appointment/{id}")]
-        public async Task<IActionResult> GetAppointment(int id)
+        public async Task<IActionResult> GetAppointment(int id, PatientsVaccinatesForCreation model)
         {
             var appointment = await _repo.GetAppointment(id);
             var appointmentToReturn = _mapper.Map<AppointmentPatientForListDto>(appointment);
+            model.TimeOfVaccination = DateTime.Now;
+            
+            
 
             return Ok(appointmentToReturn);
         }
 
+        [HttpGet("get/vaccines")]
+        public async Task<IActionResult> GetVaccines()
+        {
+            var vaccinesToGet = await _context.Vaccineses.OrderByDescending(u=> u.Id).ToListAsync();
+
+            if (!vaccinesToGet.IsNullOrEmpty())
+            {
+                return Ok(vaccinesToGet);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("get/patientsVaccines")]
+        public async Task<IActionResult> GetPatientsVaccines()
+        {
+            var user = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var userToPatient = await _repo.GetPatient(user);
+
+            var vaccinesSchedule = await _repo.GetPatientsVaccination(userToPatient.Id);
+
+            var vaccinesScheduleToList = _mapper.Map<IEnumerable<PatientsVaccinatesForListDto>>(vaccinesSchedule);
+
+            return Ok(vaccinesScheduleToList);
+        }
+        
+        [Authorize(Policy = "RequiredPhysicianRole")]
+        [HttpPost("create/vaccinesShot")]
+        public async Task<IActionResult> CreateVaccinesShot(PatientsVaccinatesForCreation model)
+        {
+            model.TimeOfVaccination = DateTime.Today;
+            var patientVaccinate = _mapper.Map<PatientVaccinated>(model);
+            
+            _repo.Add(patientVaccinate);
+
+            if (await _repo.SaveAll())
+                return Ok(patientVaccinate);
+
+            return BadRequest();
+        }
         [HttpDelete("delete/appointment/{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {

@@ -19,6 +19,22 @@
         <app-appointment-management></app-appointment-management>
       </ng-template>
     </ng-container>
+    <ng-container ngbNavItem>
+      <a ngbNavLink>
+        Vaccine management
+      </a>
+      <ng-template ngbNavContent>
+        <app-vaccines-management></app-vaccines-management>
+      </ng-template>
+    </ng-container>
+    <ng-container ngbNavItem>
+      <a ngbNavLink>
+        Create physician
+      </a>
+      <ng-template ngbNavContent>
+        <app-physician-registration></app-physician-registration>
+      </ng-template>
+    </ng-container>
   </nav>
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>

@@ -10,6 +10,12 @@
       <li *appHasRole="['Admin']" class="nav-item">
         <a [routerLink]="['/admin']" class="nav-link">Admin</a>
       </li>
+      <li *appHasRole="['Patient']" class="nav-item">
+        <a [routerLink]="['/vaccines']" class="nav-link">Vaccines record</a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/vaccineList']" class="nav-link">List of vaccines</a>
+      </li>
     </ul>
 
     <div *ngIf="loggedIn()" ngbDropdown class="d-inline-block">

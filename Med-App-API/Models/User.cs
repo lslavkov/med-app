@@ -7,7 +7,7 @@ namespace Med_App_API.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<UserRole> UserRoles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         // public ICollection<Patient> Patients { get; set; }
         // public ICollection<Physician> Physicians { get; set; }
     }
