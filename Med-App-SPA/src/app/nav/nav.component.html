@@ -1,14 +1,20 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark" routerLinkActive="active">
   <div class="container">
 
-    <a class="navbar-brand">Med App</a>
+    <a class="navbar-brand" [routerLink]="['/home']">Med App</a>
 
     <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/home']">Home</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
+      <li class="nav-item">
         <a class="nav-link" [routerLink]="['/appointment']">Appointment</a>
+      </li>
+      <li *appHasRole="['Admin']" class="nav-item">
+        <a [routerLink]="['/admin']" class="nav-link">Admin</a>
+      </li>
+      <li *appHasRole="['Patient']" class="nav-item">
+        <a [routerLink]="['/vaccines']" class="nav-link">Vaccines record</a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/vaccineList']" class="nav-link">List of vaccines</a>
       </li>
     </ul>
 
@@ -39,8 +45,6 @@
           </div>
           <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary">Sign in</button>
         </form>
-        <div class="dropdown-divider"></div>
-        <button ngbDropdownItem>Forgot password?</button>
       </div>
       <button *ngIf="!loggedIn()" class="btn btn-primary" [routerLink]="['/register']" >Sign Up</button>
     </div>

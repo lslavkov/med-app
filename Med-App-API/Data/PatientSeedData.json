@@ -1,0 +1,82 @@
+[
+  {
+    "Username": "Mcgowan",
+    "Password": "password",
+    "Firstname": "Velez",
+    "LastName": "Tanner",
+    "Email": "ameliabennett@quility.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Bauer",
+    "Password": "password",
+    "Firstname": "Terrell",
+    "LastName": "Leach",
+    "Email": "sarahwalter@pyrami.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Shaw",
+    "Password": "password",
+    "Firstname": "Hansen",
+    "LastName": "Salinas",
+    "Email": "mckinneybrown@gology.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Hunter",
+    "Password": "password",
+    "Firstname": "Marshall",
+    "LastName": "Norris",
+    "Email": "hartsexton@infotrips.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Maxwell",
+    "Password": "password",
+    "Firstname": "Keller",
+    "LastName": "Christensen",
+    "Email": "monroehuffman@aquafire.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Sellers",
+    "Password": "password",
+    "Firstname": "Nolan",
+    "LastName": "Jarvis",
+    "Email": "paulettedennis@medesign.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Logan",
+    "Password": "password",
+    "Firstname": "Knapp",
+    "LastName": "Nunez",
+    "Email": "biancawaters@zizzle.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Weaver",
+    "Password": "password",
+    "Firstname": "Pugh",
+    "LastName": "Phillips",
+    "Email": "weberhurley@eplode.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Chaney",
+    "Password": "password",
+    "Firstname": "Howe",
+    "LastName": "Wynn",
+    "Email": "brendawhite@isosphere.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Berry",
+    "Password": "password",
+    "Firstname": "Clements",
+    "LastName": "Cantu",
+    "Email": "fitzgeraldlindsey@plasmox.com",
+    "EmailConfirmed": true
+  }
+]

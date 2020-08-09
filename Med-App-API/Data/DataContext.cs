@@ -16,6 +16,8 @@ namespace Med_App_API.Data
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Physician> Physicians { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Vaccines> Vaccineses { get; set; }
+        public DbSet<PatientVaccinated> PatientVaccinateds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,13 +44,19 @@ namespace Med_App_API.Data
             });
             builder.Entity<Appointment>(appointments =>
             {
-            
                 appointments.HasOne(x => x.Patient)
                             .WithMany(x => x.Appointments)
                             .HasForeignKey(x => x.PatientFKId);
                 appointments.HasOne(x => x.Physician)
                             .WithMany(x => x.Appointments)
                             .HasForeignKey(x => x.PhysicianFKId);
+            });
+
+            builder.Entity<PatientVaccinated>(vaccines =>
+            {
+                vaccines.HasOne(x => x.Patient)
+                        .WithMany(x => x.Vaccineses)
+                        .HasForeignKey(x => x.PatientFKId);
             });
         }
     }

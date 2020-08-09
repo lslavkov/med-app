@@ -43,7 +43,6 @@ export class AuthService {
   roleMatch(allowedRoles): boolean {
     let isMatch = false;
     const userRoles = this.decodedToken.role as Array<string>;
-    console.log(userRoles);
     allowedRoles.forEach(element => {
       if (userRoles.includes(element)) {
         console.log(element);

@@ -11,8 +11,5 @@ namespace Med_App_API.Dto
         [Required] [EmailAddress] public string Email { get; set; }
         [Required] public string UserName { get; set; }
 
-        [Required]
-        [StringLength(16, MinimumLength = 8, ErrorMessage = "You must specify between 8 and 16")]
-        public string Password { get; set; }
     }
 }

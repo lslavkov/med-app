@@ -23,14 +23,15 @@ namespace Med_App_API.Data
         private readonly IMailService _mailService;
         private readonly DataContext _context;
 
-        public AuthRepository(UserManager<User> userManager, IConfiguration config, IMailService mailService, DataContext context)
+        public AuthRepository(UserManager<User> userManager, IConfiguration config, IMailService mailService,
+                              DataContext context)
         {
             _userManager = userManager;
             _config = config;
             _mailService = mailService;
             _context = context;
         }
-        
+
         public async Task<string> GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
@@ -55,7 +56,6 @@ namespace Med_App_API.Data
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = creds,
-                
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -64,6 +64,7 @@ namespace Med_App_API.Data
 
             return tokenHandler.WriteToken(token);
         }
+
         public async Task<UserManagerResponse> GeneratePasswordEmail(User user)
         {
             var emailToken = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -96,7 +97,7 @@ namespace Med_App_API.Data
             };
         }
 
-        public async Task<UserManagerResponse> GenerateConfirmEmail(User user)
+        public async Task<UserManagerResponse> GenerateConfirmEmail(User user, string password)
         {
             var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             if (!string.IsNullOrEmpty(emailToken))
@@ -109,7 +110,8 @@ namespace Med_App_API.Data
 
                 await _mailService.SendEmailAsync(user.Email, "Confirm your email",
                     "<h1>Thank you for registering to the med app</h1>" +
-                    $"<p>Please confirm your email by this <a href='{url}'>link</a></p>");
+                    $"<p>Please confirm your email by this <a href='{url}'>link</a></p>" +
+                    $"<p>Your password that you can login with e-mail is: {password}");
                 return new UserManagerResponse
                 {
                     Message = "Succesfully generated email token",

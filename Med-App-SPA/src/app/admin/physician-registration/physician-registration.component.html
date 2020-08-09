@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="firstName"
+        placeholder="First Name"
+        [ngClass]="{'is-invalid': registerForm.get('firstName').errors && registerForm.get('firstName').touched}"
+      >
+      <div class="invalid-feedback">Please enter your first name</div>
+    </div>
+
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="lastName"
+        placeholder="Last name"
+        [ngClass]="{'is-invalid': registerForm.get('lastName').errors && registerForm.get('lastName').touched}"
+      >
+      <div class="invalid-feedback">Please enter your last name</div>
+    </div>
+
+    <div class="form-group">
+      <input
+        type="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="E-mail"
+        [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}"
+      />
+      <div class="invalid-feedback">Please enter correct e-mail address</div>
+    </div>
+
+    <div class="form-group text-center">
+      <button
+        class="btn btn-success"
+        type="submit"
+        [disabled]="!registerForm.valid"
+      >
+        Register
+      </button>
+    </div>
+  </form>
+</div>

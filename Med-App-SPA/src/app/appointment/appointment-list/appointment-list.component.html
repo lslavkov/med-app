@@ -1,6 +1,10 @@
 <div class="text-center mt-3">
   <h1>Appointments</h1>
-  <a class="btn btn-outline-info" [routerLink]="['/appointment/create']">Create new appointment</a>
+  <a *appHasRole="['Patient']" class="btn btn-outline-info" [routerLink]="['/create/appointment']">Create new
+    appointment</a>
+  <a *appHasRole="['Physician']" class="btn btn-outline-info" [routerLink]="['/create/vaccinationRecord']">
+    Create new vaccination record
+  </a>
 </div>
 <div class="container">
   <div class="wrapper">

@@ -1,0 +1,17 @@
+<div class="text-center mt-3">
+  <h1>List of vaccines for vaccination</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <table style="width: 50%" class="table auto-format ">
+      <tr>
+        <th style="width: 10%">Id</th>
+        <th style="width: 20%">Vaccine Id</th>
+      </tr>
+      <tr *ngFor="let record of vaccineList">
+        <td>{{record.id}}</td>
+        <td>{{record.name}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

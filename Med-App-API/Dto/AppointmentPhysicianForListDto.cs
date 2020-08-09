@@ -10,5 +10,6 @@ namespace Med_App_API.Dto
         public DateTime StartOfAppointment { get; set; }
         public DateTime EndOfAppointment { get; set; }
         public string? Description { get; set; }
+        public string TypeOfAppointment { get; set; }
     }
 }

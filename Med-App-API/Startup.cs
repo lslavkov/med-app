@@ -61,7 +61,7 @@ namespace Med_App_API
             builder.AddRoleManager<RoleManager<Role>>();
             builder.AddSignInManager<SignInManager<User>>();
             services.AddCors();
-           
+
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             services.AddControllers().AddNewtonsoftJson(opt =>
             {
@@ -87,7 +87,6 @@ namespace Med_App_API
             {
                 opt.AddPolicy("RequiredAdminRole", policy => policy.RequireRole("Admin"));
                 opt.AddPolicy("RequiredPhysicianRole", policy => policy.RequireRole("Physician"));
-                opt.AddPolicy("RequiredNurseRole", policy => policy.RequireRole("Nurse"));
                 opt.AddPolicy("Patient", policy => policy.RequireRole("Patient"));
             });
             services.AddAutoMapper(typeof(MedicalRepository).Assembly);
@@ -128,7 +127,13 @@ namespace Med_App_API
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Response.Headers.Add("Content-Security-Policy",
+                    "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; " +
+                    "style-src 'self' https://maxcdn.bootstrapcdn.com");
+                await next();
+            });
             app.UseStaticFiles();
 
 

@@ -5,6 +5,20 @@
   <title>MedAppSPA</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy"
+        content="base-uri 'self';
+               block-all-mixed-content;
+               connect-src 'self' http://localhost:5000;
+               default-src 'self';
+               img-src data: https:;
+               object-src 'none';
+               script-src https://stackpath.bootstrapcdn.com/
+                          'self'
+                          'sha256-34WLX60Tw3aG6hylk0plKbZZFXCuepeQ6Hu7OqRf8PI=';
+               style-src https://stackpath.bootstrapcdn.com/
+                         'self'
+                         'unsafe-inline';
+               upgrade-insecure-requests;">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>

@@ -8,7 +8,7 @@ namespace Med_App_API.Data.Interface
     {
         Task<string> GenerateJwtToken(User user);
         Task<UserManagerResponse> GeneratePasswordEmail(User user);
-        Task<UserManagerResponse> GenerateConfirmEmail(User user);
+        Task<UserManagerResponse> GenerateConfirmEmail(User user, string password);
         Task<UserManagerResponse> ConfirmPasswordAsync(string id, string token);
         Task<UserManagerResponse> ConfirmEmailAsync(string id, string token);
     }

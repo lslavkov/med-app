@@ -1,0 +1,26 @@
+[
+  {
+    "Username": "Bowers",
+    "Password": "password",
+    "Firstname": "Harris",
+    "LastName": "Bender",
+    "Email": "tamekagarrett@acusage.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Hicks",
+    "Password": "password",
+    "Firstname": "Bradley",
+    "LastName": "Hughes",
+    "Email": "tannerwatson@combot.com",
+    "EmailConfirmed": true
+  },
+  {
+    "Username": "Pierce",
+    "Password": "password",
+    "Firstname": "Small",
+    "LastName": "Henry",
+    "Email": "priscillameyer@skinserve.com",
+    "EmailConfirmed": true
+  }
+]
