@@ -127,13 +127,14 @@ namespace Med_App_API
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseAuthorization();
-            app.Use(async (ctx, next) =>
-            {
-                ctx.Response.Headers.Add("Content-Security-Policy",
-                    "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; " +
-                    "style-src 'self' https://maxcdn.bootstrapcdn.com");
-                await next();
-            });
+            // app.Use(async (ctx, next) =>
+            // {
+            //     ctx.Response.Headers.Add("Content-Security-Policy",
+            //         "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; " +
+            //         "style-src 'self' https://maxcdn.bootstrapcdn.com");
+            //     await next();
+            // });
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
 
